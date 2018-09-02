@@ -1,0 +1,9 @@
+export const AUTH_USER = 'auth_user';
+export const UNAUTH_USER = 'unauth_user';
+export const AUTH_ERROR = 'auth_error';
+export const GET_USERS_SUCCESS = 'get_users_success';
+export const GET_USERS_ERROR = 'get_users_error';
+export const CHANGEPASSWORD_ERROR = 'changepassword_error';
+export const CHANGEPASSWORD_SUCCESS = 'changepassword_success';
+export const FETCH_FEATURE = 'fetch_feature';
+export const FETCH_BOOKS = 'fetch_books';

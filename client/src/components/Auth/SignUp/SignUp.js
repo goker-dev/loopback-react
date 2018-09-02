@@ -1,0 +1,100 @@
+import React from 'react';
+import {Field, Form, withFormik} from 'formik'
+import * as Yup from 'yup'
+import {signUp} from '../../../actions'
+import {connect} from 'react-redux'
+
+const FormikForm = ({
+                      values,
+                      touched,
+                      errors,
+                      status,
+                      isSubmitting
+                    }) => (
+  <div className="row justify-content-md-center">
+    <Form className="col-md-6">
+      <fieldset className="form-group">
+        <label>Username</label>
+        <Field className="form-control" type="text" name="username" placeholder="Username"/>
+        {touched.username && errors.username && <small className="form-text text-danger">{errors.username}</small>}
+      </fieldset>
+      <fieldset className="form-group">
+        <label>Email</label>
+        <Field className="form-control" type="text" name="email" placeholder="email@email.com"/>
+        {touched.email && errors.email && <small className="form-text text-danger">{errors.email}</small>}
+      </fieldset>
+      <div className="row">
+        <fieldset className="col-md-6 form-group">
+          <label>Name</label>
+          <Field className="form-control" type="text" name="name" placeholder="Name"/>
+          {touched.name && errors.name && <small className="form-text text-danger">{errors.name}</small>}
+        </fieldset>
+        <fieldset className="col-md-6 form-group">
+          <label>Surname</label>
+          <Field className="form-control" type="text" name="surname" placeholder="Surname"/>
+          {touched.surname && errors.surname && <small className="form-text text-danger">{errors.surname}</small>}
+        </fieldset>
+      </div>
+      <fieldset className="form-group">
+        <label>Password</label>
+        <Field className="form-control" type="password" name="password" placeholder="Password"/>
+        {touched.password && errors.password && <small className="form-text text-danger">{errors.password}</small>}
+      </fieldset>
+      {status && status.error && <div className="alert alert-danger">
+        <small>{status.error}</small>
+      </div>}
+      {status && status.success && <div className="alert alert-success">
+        <small>{status.success}</small>
+      </div>}
+      <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
+        {isSubmitting && <span><i className="fa fa-circle-notch fa-spin"></i>&nbsp;</span>}
+        Create my account
+      </button>
+    </Form>
+  </div>
+);
+
+const EnhancedForm = withFormik({
+  mapPropsToValues() {
+    return {
+      username: '',
+      email: '',
+      name: '',
+      surname: '',
+      password: '',
+    }
+  },
+  validationSchema: Yup.object().shape({
+    username: Yup.string().matches(/^[A-Za-z0-9]+(?:[._-][A-Za-z0-9]+)*$/, 'Username only contain english characters and (_,-,.). Also usernames must start and end with a letter or number.')
+      .required('Username is required'),
+    email: Yup.string().email('Please write a correct email address').required('Email is required'),
+    name: Yup.string().required('Name is required'),
+    surname: Yup.string().required('Surname is required'),
+    password: Yup.string().min(8, 'Password must be 8 characters or longer')
+      .matches(/[a-z]/, 'Password must contain at least one lowercase char')
+      .matches(/[A-Z]/, 'Password must contain at least one uppercase char')
+      .matches(/[a-zA-Z]+[^a-zA-Z\s]+/, 'at least 1 number or special char (@,!,#, etc).'),
+  }),
+  async handleSubmit(values, {props, resetForm, setFieldError, setSubmitting, setStatus}) {
+    setStatus(null);
+    try {
+      await props.signUp(values);
+      setStatus({'success': 'Your account has been created successfully!'})
+      setSubmitting(false);
+      //resetForm();
+    } catch (errors) {
+      setStatus({'error': errors})
+      setSubmitting(false);
+    }
+  }
+})(FormikForm)
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    signUp: async (values) => {
+      await dispatch(signUp(values));
+    },
+  }
+}
+
+export default connect(null, mapDispatchToProps)(EnhancedForm);

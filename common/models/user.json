@@ -1,0 +1,194 @@
+{
+  "name": "user",
+  "base": "User",
+  "idInjection": true,
+  "scope": {
+    "include": [
+      "roles"
+    ]
+  },
+  "mixins": {
+    "FullName": true,
+    "TimeStamp": true
+  },
+  "restrictResetPasswordTokenScope": true,
+  "emailVerificationRequired": true,
+  "properties": {
+    "username": {
+      "type": "string",
+      "required": "true",
+      "index": {
+        "unique": true
+      }
+    },
+    "name": {
+      "type": "string",
+      "required": "true"
+    },
+    "surname": {
+      "type": "string",
+      "required": "true"
+    },
+    "adminVerified": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "validations": [
+    {
+      "username": {
+        "type": "string",
+        "description": "User account name",
+        "min": 5,
+        "max": 22
+      },
+      "facetName": "common"
+    }
+  ],
+  "relations": {
+    "roles": {
+      "type": "hasMany",
+      "model": "Role",
+      "foreignKey": "principalId",
+      "through": "RoleMapping"
+    }
+  },
+  "acls": [
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW",
+      "property": "*"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$owner",
+      "permission": "ALLOW",
+      "property": "*"
+    }
+  ],
+  "methods": {
+    "cover": {
+      "accepts": [
+        {
+          "arg": "id",
+          "type": "string"
+        },
+        {
+          "arg": "context",
+          "type": "object",
+          "http": {
+            "source": "context"
+          }
+        },
+        {
+          "arg": "options",
+          "type": "object",
+          "http": "optionsFromRequest"
+        }
+      ],
+      "returns": {
+        "arg": "file",
+        "type": "object"
+      },
+      "http": {
+        "path": "/:id/cover",
+        "verb": "post"
+      }
+    },
+    "image": {
+      "accepts": [
+        {
+          "arg": "id",
+          "type": "string"
+        },
+        {
+          "arg": "context",
+          "type": "object",
+          "http": {
+            "source": "context"
+          }
+        },
+        {
+          "arg": "options",
+          "type": "object",
+          "http": "optionsFromRequest"
+        }
+      ],
+      "returns": {
+        "arg": "file",
+        "type": "object"
+      },
+      "http": {
+        "path": "/:id/image",
+        "verb": "post"
+      }
+    },
+    "approve": {
+      "accepts": [
+        {
+          "arg": "id",
+          "type": "string"
+        }
+      ],
+      "returns": {
+        "arg": "user",
+        "type": "object"
+      },
+      "http": {
+        "path": "/:id/approve",
+        "verb": "post"
+      }
+    },
+    "profile": {
+      "accepts": [
+        {
+          "arg": "username",
+          "type": "string"
+        }
+      ],
+      "returns": {
+        "arg": "user",
+        "type": "object"
+      },
+      "http": {
+        "path": "/profile/:username",
+        "verb": "get"
+      }
+    },
+    "toggleAdmin": {
+      "accepts": [
+        {
+          "arg": "id",
+          "type": "string"
+        }
+      ],
+      "returns": {
+        "arg": "data",
+        "type": "object"
+      },
+      "http": {
+        "path": "/:id/toggleAdmin",
+        "verb": "post"
+      }
+    },
+    "toggleEditor": {
+      "accepts": [
+        {
+          "arg": "id",
+          "type": "string"
+        }
+      ],
+      "returns": {
+        "arg": "data",
+        "type": "object"
+      },
+      "http": {
+        "path": "/:id/toggleEditor",
+        "verb": "post"
+      }
+    }
+  }
+}

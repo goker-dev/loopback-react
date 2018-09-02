@@ -14,25 +14,45 @@
     ]
   },
   "User": {
-    "dataSource": "db"
+    "dataSource": "mongo",
+    "public": false
   },
   "AccessToken": {
-    "dataSource": "db",
+    "dataSource": "mongo",
+    "public": true
+  },
+  "UserCredential": {
+    "dataSource": "mongo",
+    "public": false
+  },
+  "UserIdentity": {
+    "dataSource": "mongo",
     "public": false
   },
   "ACL": {
-    "dataSource": "db",
+    "dataSource": "mongo",
     "public": false
   },
   "RoleMapping": {
-    "dataSource": "db",
+    "dataSource": "mongo",
     "public": false,
     "options": {
       "strictObjectIDCoercion": true
     }
   },
   "Role": {
-    "dataSource": "db",
+    "dataSource": "mongo",
     "public": false
+  },
+  "user": {
+    "dataSource": "mongo",
+    "public": true,
+    "options": {
+      "emailVerificationRequired": true
+    }
+  },
+  "container": {
+    "dataSource": "storage",
+    "public": true
   }
 }
