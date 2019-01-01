@@ -5,7 +5,7 @@ import SignUp from '../components/Auth/SignUp';
 import SignIn from '../components/Auth/SignIn';
 import SignOut from '../components/Auth/SignOut';
 import Welcome from '../components/Welcome';
-import About from '../components/About';
+import Features from '../components/Features';
 import Home from '../components/Home';
 import Profile from '../components/Profile';
 import Settings from '../components/Settings';
@@ -19,7 +19,7 @@ const Routes = () => {
     <App>
       <Switch>
         <Route exact path="/" component={Welcome}/>
-        <Route exact path="/about" component={About}/>
+        <Route exact path="/features" component={Features}/>
         <Route exact path="/signin" component={SignIn}/>
         <Route exact path="/signout" component={SignOut}/>
         <Route exact path="/signup" component={SignUp}/>

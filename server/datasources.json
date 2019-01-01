@@ -11,14 +11,16 @@
     "password": "",
     "name": "mongo",
     "user": "",
+    "useNewUrlParser": "true",
     "connector": "mongodb"
   },
   "storage": {
     "name": "storage",
     "connector": "loopback-component-storage",
     "provider": "filesystem",
-    "root": "/var/www/workspace/loopback-react/data/",
-    "maxFileSize": "52428800"
+    "root": "/var/www/workspace/playground/data/",
+    "maxFileSize": "52428800",
+    "nameConflict": "makeUnique"
   },
   "email": {
     "name": "email",

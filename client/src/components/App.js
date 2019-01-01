@@ -1,21 +1,29 @@
 import React, {PureComponent} from 'react';
-import Header from './Common/Header'
+import Navbar from './Common/Navbar'
+import Footer from './Common/Footer'
+
+import '../styles/App.scss';
 
 class App extends PureComponent {
-  render() {
-    return (
-      <React.Fragment>
-        <Header/>
-        <div className="container" style={{marginTop: '50px'}}>
-          <div className="row">
-            <div className="col-md-12">
-              {this.props.children}
-            </div>
-          </div>
-        </div>
-      </React.Fragment>
-    );
-  }
+    constructor(props) {
+        super(props)
+        this.state = {
+            me: props.me
+        }
+    }
+
+    render() {
+        console.log('App render', this.state.me);
+        return (
+            <React.Fragment>
+                <Navbar/>
+                <div className="page" data-spy="scroll" data-target="#navbar" data-offset="0">
+                    {this.props.children}
+                </div>
+                <Footer/>
+            </React.Fragment>
+        );
+    }
 }
 
 export default App;

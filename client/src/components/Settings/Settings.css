@@ -1,0 +1,79 @@
+.image-input {
+    height: 0;
+    overflow: hidden;
+}
+
+.CoverImage {
+    position: relative;
+    margin: 0 auto 80px;
+    width: 100%;
+    min-height: 200px;
+    z-index: 98;
+    background: #333;
+}
+
+.CoverImage .loader {
+    display: none;
+}
+
+.CoverImage.uploading .loader {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    top: 0;
+    background: rgba(255, 255, 255, .4);
+}
+
+.CoverImage.uploading .fa {
+    display: flex;
+    margin: 0 auto;
+    color: #0F0F0F;
+}
+
+.CoverImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ProfileImage {
+    position: absolute;
+    margin-left: -80px;
+    margin-bottom: -80px;
+    left: 50%;
+    bottom: 0;
+    width: 160px;
+    height: 160px;
+    z-index: 99;
+}
+
+.ProfileImage .loader {
+    display: none;
+}
+
+.ProfileImage.uploading .loader {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    top: 0;
+    background: rgba(255, 255, 255, .4);
+}
+
+.ProfileImage.uploading .fa {
+    display: flex;
+    margin: 0 auto;
+    color: #0F0F0F;
+}
+
+.ProfileImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: solid 5px #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+}

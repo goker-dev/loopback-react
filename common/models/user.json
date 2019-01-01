@@ -57,14 +57,14 @@
     {
       "accessType": "*",
       "principalType": "ROLE",
-      "principalId": "admin",
-      "permission": "ALLOW",
+      "principalId": "$everyone",
+      "permission": "DENY",
       "property": "*"
     },
     {
       "accessType": "*",
       "principalType": "ROLE",
-      "principalId": "$owner",
+      "principalId": "admin",
       "permission": "ALLOW",
       "property": "*"
     }
