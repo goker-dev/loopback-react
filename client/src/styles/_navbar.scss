@@ -1,18 +1,19 @@
 #navbar {
   background-color: $primary;
+  border-bottom: 1px dashed $gray-900;
   .navbar-toggler {
     font-size: 12px;
     right: 0;
     padding: 13px;
     text-transform: uppercase;
     color: white;
-    border: 0;
     background-color: $primary;
     @include heading-font;
   }
   .navbar-brand {
-    color: $gray-900;
-    @include heading-font;
+    img {
+      height: 42px;
+    }
     &.active,
     &:active,
     &:focus,
@@ -45,20 +46,21 @@
       }
     }
   }
+  .dropdown-menu {
+    margin-top: 0;
+    border: 0;
+    border-radius: 0 0 4px 4px;
+    box-shadow:  0 .5em .5em $gray-300;
+  }
 }
-@media(min-width:992px) {
+
+@media(min-width: 992px) {
   #navbar {
     padding-top: 25px;
     padding-bottom: 25px;
-    -webkit-transition: padding-top 0.3s, padding-bottom 0.3s;
-    -moz-transition: padding-top 0.3s, padding-bottom 0.3s;
     transition: padding-top 0.3s, padding-bottom 0.3s;
-    border: none;
     background-color: transparent;
-    .navbar-brand {
-      font-size: 1.75em;
-      -webkit-transition: all 0.3s;
-      -moz-transition: all 0.3s;
+    .navbar-brand img {
       transition: all 0.3s;
     }
     .navbar-nav {
@@ -71,11 +73,13 @@
     &.navbar-shrink {
       padding-top: 0;
       padding-bottom: 0;
-      background-color: $primary;
-      border-bottom: 1px solid $gray-900;
+      background-color: $white;
+      border-bottom: 0;
+      box-shadow: 0 0 .5em $gray-300;
       .navbar-brand {
-        font-size: 1.25em;
-        padding: 12px 0;
+        img {
+          height: 32px;
+        }
       }
     }
   }

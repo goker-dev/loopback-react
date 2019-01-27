@@ -35,18 +35,26 @@ class Profile extends Component {
 
     render() {
         const user = this.state.user;
-        if (!user) return <section className="container"><div className="profile">User not found!
-            <p>{JSON.stringify(process.env)}</p></div></section>;
+        if (!user) return <section className="container">
+            <div className="profile">User not found!
+                <p>{JSON.stringify(process.env)}</p></div>
+        </section>;
         const fullName = user.name + ' ' + user.surname;
         return <section className="container">
             <div className="profile">
                 <div className="fb-profile">
                     <img align="left" className="fb-image-lg img-fluid"
-                         onError={(e)=>{e.target.onerror = null; e.target.src="http://holder.ninja/1200x360,cover-1200x360.svg"}}
+                         onError={(e) => {
+                             e.target.onerror = null;
+                             e.target.src = "http://holder.ninja/1200x360,cover-1200x360.svg"
+                         }}
                          src={FILE_URL + user.cover.normal}
                          alt="{fullName}"/>
                     <img align="left" className="fb-image-profile img-thumbnail"
-                         onError={(e)=>{e.target.onerror = null; e.target.src="http://holder.ninja/180x180,profile.svg"}}
+                         onError={(e) => {
+                             e.target.onerror = null;
+                             e.target.src = "http://holder.ninja/180x180,profile.svg"
+                         }}
                          src={FILE_URL + user.image.normal}
                          alt="{fullName}"/>
                     <div className="fb-profile-text">

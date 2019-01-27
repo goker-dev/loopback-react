@@ -25,11 +25,11 @@ class Footer extends PureComponent {
                                 <li className="nav-item" key="about">
                                     <Link className="nav-link py-0" to="/about">About</Link>
                                 </li>
-                                <li className="nav-item" key="terms-of-service">
-                                    <Link className="nav-link py-0" to="/terms-of-service">Terms of Service</Link>
+                                <li className="nav-item" key="tos">
+                                    <Link className="nav-link py-0" to="/tos">Terms of Service</Link>
                                 </li>
-                                <li className="nav-item" key="privacy-policy">
-                                    <Link className="nav-link py-0" to="/privacy-policy">Privacy Policy</Link>
+                                <li className="nav-item" key="privacy">
+                                    <Link className="nav-link py-0" to="/privacy">Privacy Policy</Link>
                                 </li>
                             </ul>
                         </div>

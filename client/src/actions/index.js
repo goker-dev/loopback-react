@@ -3,6 +3,7 @@ import History from '../history.js';
 import * as type from './types';
 
 const API_URL = process.env.REACT_APP_API_URL;
+console.log('API_URL', process.env.REACT_APP_API_URL);
 let TOKEN = localStorage.getItem('token');
 let UID = localStorage.getItem('uid');
 
@@ -57,13 +58,26 @@ export const signOut = () => {
     return {type: type.UNAUTH_USER, me: false};
 };
 
+function computeUser(user) {
+    user.isAdmin = user.roles.find(x => x.name === 'admin');
+    user.isEditor = user.roles.find(x => x.name === 'editor');
+    user.isManager = user.roles.find(x => x.name === 'manager');
+    user.isWorker = user.roles.find(x => x.name === 'worker');
+    user.icon = user.isAdmin ? 'fas fa-user-astronaut'
+        : user.isEditor ? 'fa fa-user-secret'
+            : user.isManager || user.isWorker ? 'fa fa-user-tie' : 'fa fa-user';
+    user.image = user.image || {thumbnail: null, normal: null, original: null};
+    user.cover = user.cover || {thumbnail: null, normal: null, original: null};
+    return user;
+}
+
 export const getUser = (uid) => {
     return new Promise((resolve, reject) => {
         axios.get(`${API_URL}/users/${uid}`, {
             headers: {authorization: localStorage.getItem('token')}
         })
             .then(response => {
-                resolve(response.data)
+                resolve(computeUser(response.data))
             })
             .catch(error => {
                 reject(error.response.data.error)
@@ -77,7 +91,7 @@ export const getProfile = (username) => {
             headers: {authorization: localStorage.getItem('token')}
         })
             .then(response => {
-                resolve(response.data.user)
+                resolve(computeUser(response.data.user))
             })
             .catch(error => {
                 reject(error.response.data.error)
@@ -140,13 +154,13 @@ export const getUsers = () => {
             headers: {authorization: localStorage.getItem('token')}
         })
             .then(response => {
-                dispatch({type: type.GET_USERS_SUCCESS, payload: response.data});
+                dispatch({type: type.GET_USERS_SUCCESS, payload: response.data.map(user => computeUser(user))});
             })
             .catch(error => {
                 console.log('ERROR --', error);
                 dispatch({
                     type: type.GET_USERS_ERROR,
-                    payload: error.response.data && error.response.data.error.message
+                    payload: error.response && error.response.data && error.response.data.error.message
                 });
             });
     }

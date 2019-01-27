@@ -11,56 +11,63 @@ const FormikForm = ({
                         errors,
                         status,
                         isSubmitting
-                    }) => (<section className="container">
-        <div className="row justify-content-md-center">
-            <Form className="col-sm-4">
-                <h1 className="section-heading lined"><span>SIGN UP</span></h1>
-                <fieldset className="form-group">
-                    <label>Username</label>
-                    <Field className="form-control" type="text" name="username" placeholder="Username"/>
-                    {touched.username && errors.username &&
-                    <small className="form-text text-danger">{errors.username}</small>}
-                </fieldset>
-                <fieldset className="form-group">
-                    <label>Email</label>
-                    <Field className="form-control" type="text" name="email" placeholder="email@email.com"/>
-                    {touched.email && errors.email && <small className="form-text text-danger">{errors.email}</small>}
-                </fieldset>
-                <div className="row">
-                    <fieldset className="col-md-6 form-group">
-                        <label>Name</label>
-                        <Field className="form-control" type="text" name="name" placeholder="Name"/>
-                        {touched.name && errors.name && <small className="form-text text-danger">{errors.name}</small>}
-                    </fieldset>
-                    <fieldset className="col-md-6 form-group">
-                        <label>Surname</label>
-                        <Field className="form-control" type="text" name="surname" placeholder="Surname"/>
-                        {touched.surname && errors.surname &&
-                        <small className="form-text text-danger">{errors.surname}</small>}
-                    </fieldset>
+                    }) => (<section className="cover  bg-light">
+        <div className="container">
+            <div className="row h-100 justify-content-md-center">
+                <div className="col-sm-4 my-auto">
+                    <Form className="card border-0 p-4 shadow">
+                        <h1 className="h4 lined"><span>SIGN UP</span></h1>
+                        <fieldset className="form-group">
+                            <label className="small">Username</label>
+                            <Field className="form-control" type="text" name="username" placeholder="Username"/>
+                            {touched.username && errors.username &&
+                            <small className="form-text text-danger">{errors.username}</small>}
+                        </fieldset>
+                        <fieldset className="form-group">
+                            <label className="small">Email</label>
+                            <Field className="form-control" type="text" name="email" placeholder="email@email.com"/>
+                            {touched.email && errors.email &&
+                            <small className="form-text text-danger">{errors.email}</small>}
+                        </fieldset>
+                        <div className="row">
+                            <fieldset className="col-md-6 form-group">
+                                <label className="small">Name</label>
+                                <Field className="form-control" type="text" name="name" placeholder="Name"/>
+                                {touched.name && errors.name &&
+                                <small className="form-text text-danger">{errors.name}</small>}
+                            </fieldset>
+                            <fieldset className="col-md-6 form-group">
+                                <label className="small">Surname</label>
+                                <Field className="form-control" type="text" name="surname" placeholder="Surname"/>
+                                {touched.surname && errors.surname &&
+                                <small className="form-text text-danger">{errors.surname}</small>}
+                            </fieldset>
+                        </div>
+                        <fieldset className="form-group">
+                            <label className="small">Password</label>
+                            <Field className="form-control" type="password" name="password" placeholder="Password"/>
+                            {touched.password && errors.password &&
+                            <small className="form-text text-danger">{errors.password}</small>}
+                        </fieldset>
+                        {status && status.error && <div className="alert alert-danger">
+                            <small>{status.error}</small>
+                        </div>}
+                        {status && status.success && <div className="alert alert-success">
+                            <small>{status.success}</small>
+                        </div>}
+                        <p className="text-muted text-center small">By creating an account, you agree to our <Link
+                            to="/tos">Terms of Service</Link>&nbsp;
+                            and <Link to="/privacy">Privacy Policy</Link>.
+                        </p>
+                        <button className="btn btn-primary w-100" type="submit" disabled={isSubmitting}>
+                            {isSubmitting && <span><i className="fa fa-circle-notch fa-spin"></i>&nbsp;</span>}
+                            Create my account
+                        </button>
+                        <p className="pt-4 text-center small">You can <Link to="/signin">sign in</Link> if you have an account
+                            already.</p>
+                    </Form>
                 </div>
-                <fieldset className="form-group">
-                    <label>Password</label>
-                    <Field className="form-control" type="password" name="password" placeholder="Password"/>
-                    {touched.password && errors.password &&
-                    <small className="form-text text-danger">{errors.password}</small>}
-                </fieldset>
-                {status && status.error && <div className="alert alert-danger">
-                    <small>{status.error}</small>
-                </div>}
-                {status && status.success && <div className="alert alert-success">
-                    <small>{status.success}</small>
-                </div>}
-                <p className="text-muted text-center">By creating an account, you agree to our <Link to="/terms-of-service">Terms of Service</Link>&nbsp;
-                    and <Link to="/privacy-policy">Privacy Policy</Link>.
-                </p>
-                <button className="btn btn-primary w-100" type="submit" disabled={isSubmitting}>
-                    {isSubmitting && <span><i className="fa fa-circle-notch fa-spin"></i>&nbsp;</span>}
-                    Create my account
-                </button>
-                <p className="pt-2 text-center">You can <Link to="/signin">sign in</Link> if you have an account
-                    already.</p>
-            </Form>
+            </div>
         </div>
     </section>
 );

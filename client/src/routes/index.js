@@ -13,6 +13,8 @@ import Users from '../components/Users';
 import User from '../components/User';
 import UserEdit from '../components/User/Edit';
 import NoMatch from '../components/NoMatch';
+import TermsOfService from "../components/StaticPages/TermsOfService";
+import PrivacyPolicy from "../components/StaticPages/PrivacyPolicy";
 
 const Routes = () => {
   return (
@@ -20,6 +22,8 @@ const Routes = () => {
       <Switch>
         <Route exact path="/" component={Welcome}/>
         <Route exact path="/features" component={Features}/>
+        <Route exact path="/tos" component={TermsOfService}/>
+        <Route exact path="/privacy" component={PrivacyPolicy}/>
         <Route exact path="/signin" component={SignIn}/>
         <Route exact path="/signout" component={SignOut}/>
         <Route exact path="/signup" component={SignUp}/>

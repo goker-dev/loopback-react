@@ -1,7 +1,80 @@
-.page {
-  padding: 60px 0;
+html, body {
+  height: 100%;
+}
+
+#root, .page {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  width: 100%;
+  min-height: 100%;
 }
 
 section {
-  padding: 100px 0;
+  padding: 120px 0;
+  &.cover {
+    display: flex;
+    flex-grow: 1;
+    height: 100%;
+  }
 }
+
+.lined {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  &:before,
+  &:after {
+    content: '';
+    border-top: 2px solid $gray-300;
+    margin: 0 20px 0 0;
+    flex: 1 0 20px;
+  }
+  &:after {
+    margin: 0 0 0 20px;
+  }
+  &.lined-primary {
+    &:before,
+    &:after {
+      border-color: $primary;
+    }
+  }
+  &.lined-secondary {
+    &:before,
+    &:after {
+      border-color: $secondary;
+    }
+  }
+  &.lined-third {
+    &:before,
+    &:after {
+      border-color: $third;
+    }
+  }
+  &.lined-fourth {
+    &:before,
+    &:after {
+      border-color: $fourth;
+    }
+  }
+  &.lined-align-left {
+    text-align: left;
+    &:before {
+      border: 0;
+      margin: 0;
+      flex: 0;
+    }
+  }
+  &.lined-align-right {
+    text-align: right;
+    &:after {
+      border: 0;
+      margin: 0;
+      flex: 0;
+    }
+  }
+}
+
+
