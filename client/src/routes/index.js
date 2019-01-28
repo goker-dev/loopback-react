@@ -31,7 +31,7 @@ const Routes = () => {
 
         <Route exact path="/profile" component={Profile} username="me"/>
         <Route exact path="/settings/:page?" component={Settings}/>
-        <Route exact path="/users" component={Users}/>
+        <Route exact path="/users/:page?/:id?" component={Users}/>
         <Route exact path="/users/:id" component={User}/>
         <Route exact path="/users/:id/edit" component={UserEdit}/>
 

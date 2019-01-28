@@ -41,10 +41,10 @@ class Settings extends PureComponent {
     render() {
         return <section className="container">
             <div className="row">
-                <nav className="d-none d-md-block border-right sidebar">
+                <nav className="col-md-2 d-none d-md-block border-right sidebar">
                     <div className="sidebar-sticky">
-                        <h4><i className="fa fa-cogs"/> Settings</h4>
-                        <ul className="nav flex-column">
+                        <h5 className="sidebar-heading text-muted"><i className="fa fa-cogs"/> Settings</h5>
+                        <ul className="nav flex-column small">
                             {routes.map((route, index) => (
                                 <li key={index} className="nav-item">
                                     <Link className="nav-link active" to={route.link}>

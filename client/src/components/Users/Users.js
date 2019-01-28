@@ -1,74 +1,80 @@
-import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
-import {connect} from 'react-redux';
-import * as actions from '../../actions';
-import History from "../../history";
+import React from 'react';
+import {Link, Route} from 'react-router-dom';
+import List from "./List";
+import Add from "./Add";
+import Edit from "./Edit";
 
-const FILE_URL = process.env.REACT_APP_FILE_URL;
+const routes = [
+    {
+        path: '/users(/list)?',
+        link: '/users/list',
+        icon: 'fa fa-users',
+        exact: true,
+        title: () => 'User List',
+        name: 'List',
+        main: List
+    },
+    {
+        path: '/users/add',
+        link: '/users/add',
+        icon: 'fa fa-plus',
+        exact: true,
+        title: () => 'Add New User',
+        name: 'Add',
+        main: Add
+    },
+    {
+        path: '/users/edit/:id?',
+        link: null,
+        icon: 'fa fa-image',
+        exact: true,
+        title: () => 'Edit User',
+        name: 'Edit',
+        main: Edit
+    },
+];
 
-class Users extends Component {
-
-    constructor(props) {
-        super(props)
-        this.state = {
-            me: props.me
-        }
-    }
-
-    componentDidMount() {
-        if (!this.state.me)
-            return History.push('/signin');
-        this.props.getUsers();
-    }
-
-    renderUsers() {
-        return this.props.users.map(user => {
-            return <div className="col-sm-4" key={user.id}>
-                <div className="card mb-2">
-                    <div className="card-body p-2">
-                        <img className="img-thumbnail rounded-circle float-left mr-2"
-                             onError={(e) => {
-                                 e.target.onerror = null;
-                                 e.target.src = "http://holder.ninja/100x100,P.svg"
-                             }}
-                             src={FILE_URL + (user.image && user.image.thumb)} alt={user.name}/>
-                        <div className="">
-                            <h3 className="h5 card-title">
-                                <i className={user.icon}/> {user.username}</h3>
-                            <p>
-                                <small>{user.name} {user.surname}</small>
-                            </p>
-                            <Link to={user.username} className="btn btn-sm btn-primary">PROFILE</Link>
-                            {(this.props.me.isAdmin || this.props.me.isEditor) &&
-                            <Link to={'/users/' + user.id} className="btn btn-sm btn-success ml-1">ACCOUNT</Link>}
-                        </div>
-                    </div>
-                </div>
-            </div>;
-        })
-    }
+class Users extends React.PureComponent {
 
     render() {
-        if (!this.props.users) {
-            return <div>Loading...</div>;
-        }
-
-        return (<React.Fragment>
-                <section>
-                    <div className="container">
-                        <h1 className="h4 text-primary lined lined-align-left lined-primary">Users</h1>
-                        <div className="row">
-                            {this.renderUsers()}
-                        </div>
+        return <section className="container">
+            <div className="row">
+                <nav className="col-md-2 d-none d-md-block border-right sidebar">
+                    <div className="sidebar-sticky">
+                        <h5 className="sidebar-heading text-muted"><i className="fa fa-users"/> User Management</h5>
+                        <ul className="nav flex-column small">
+                            {routes.map((route, index) => (
+                                route.link && <li key={index} className="nav-item">
+                                    <Link className="nav-link active" to={route.link}>
+                                        <i className={route.icon}/> {route.name}
+                                    </Link>
+                                </li>))}
+                        </ul>
                     </div>
-                </section>
-            </React.Fragment>
-        );
+                </nav>
+                <main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-4">
+                    <h1 className="main-heading text-primary lined lined-align-left lined-primary">
+                        {routes.map((route, index) => (
+                            <Route
+                                key={index}
+                                path={route.path}
+                                exact={route.exact}
+                                component={route.title}
+                            />
+                        ))}
+                    </h1>
+                    {routes.map((route, index) => (
+                        <Route
+                            key={index}
+                            path={route.path}
+                            exact={route.exact}
+                            component={route.main}
+                        />
+                    ))}
+                </main>
+            </div>
+        </section>;
     }
 }
 
-const mapStateToProps = (state) => {
-    return {me: state.auth.me, users: state.users.data}
-}
-
-export default connect(mapStateToProps, actions)(Users);
+export default Users;

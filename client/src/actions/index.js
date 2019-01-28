@@ -14,7 +14,7 @@ export const signUp = (...data) => {
                 History.push('/signin');
             })
             .catch(error => {
-                throw error.response.data.error.message;
+                throw error && error.response && error.response.data.error.message;
             });
     };
 };
@@ -179,7 +179,7 @@ export const updateUser = async (data) => {
 
 export const toggleAdmin = (id) => {
     return new Promise((resolve, reject) => {
-        axios.post(`${API_URL}/users/${id}/toggleAdmin`,
+        axios.post(`${API_URL}/users/${id}/toggleAdmin`, {id},
             {headers: {authorization: TOKEN}})
             .then(response => {
                 resolve(response.data.data)
@@ -192,7 +192,7 @@ export const toggleAdmin = (id) => {
 
 export const toggleEditor = (id) => {
     return new Promise((resolve, reject) => {
-        axios.post(`${API_URL}/users/${id}/toggleEditor`,
+        axios.post(`${API_URL}/users/${id}/toggleEditor`, {id},
             {headers: {authorization: TOKEN}})
             .then(response => {
                 resolve(response.data.data)

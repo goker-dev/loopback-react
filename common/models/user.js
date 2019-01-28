@@ -1,10 +1,10 @@
-var config = require('../../server/config.json');
-var sharp = require('sharp');
-var nodemailer = require("nodemailer");
-var mandrillTransport = require('nodemailer-mandrill-transport');
-var from = config.fromMail;
+const config = require('../../server/config.json');
+const sharp = require('sharp');
+const nodemailer = require("nodemailer");
+const mandrillTransport = require('nodemailer-mandrill-transport');
+const from = config.fromMail;
 
-var transport = nodemailer.createTransport(mandrillTransport({
+const transport = nodemailer.createTransport(mandrillTransport({
     auth: {
         apiKey: config.mandrillApiKey
     },
@@ -13,7 +13,7 @@ var transport = nodemailer.createTransport(mandrillTransport({
     }
 }));
 
-var templateMail = function (title, html) {
+const templateMail = function (title, html) {
     return '<html><head>' +
         '<meta name="viewport" content="width=device-width" />' +
         '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> ' +
@@ -28,8 +28,8 @@ var templateMail = function (title, html) {
         '</tr></table>' +
         '</body></html>';
 };
-module.exports = function (User, Role, RoleMapping) {
 
+module.exports = function (User) {
     User.cover = function (id, context, options, cb) {
         const Container = User.app.models.Container;
         const token = options && options.accessToken;
@@ -93,7 +93,7 @@ module.exports = function (User, Role, RoleMapping) {
                 });
             }
         });
-    }
+    };
     User.image = function (id, context, options, cb) {
         const Container = User.app.models.Container;
         const token = options && options.accessToken;
@@ -182,10 +182,10 @@ module.exports = function (User, Role, RoleMapping) {
                     next(err);
                 }
                 else {
-                    var title = 'Account Verification';
-                    var link = config.url + '/api/users/confirm?uid='
+                    const title = 'Account Verification';
+                    const link = config.url + '/api/users/confirm?uid='
                         + user.id + '&redirect=/signin&token=' + token;
-                    var html = '<table><tr><td style="padding:15px">Hi <strong>' + user.name + '</strong>;<br><br>' +
+                    const html = '<table><tr><td style="padding:15px">Hi <strong>' + user.name + '</strong>;<br><br>' +
                         'Thanks so much joining ' + config.name + '! To finish your register you just need to confirm that we got your email right.' +
                         '</td></tr><tr><td style="padding:15px;text-align: center">' +
                         '<a href="' + link + '" ' +
@@ -241,8 +241,8 @@ module.exports = function (User, Role, RoleMapping) {
 
     //send password reset link when requested
     User.on('resetPasswordRequest', function (user) {
-        var url = config.url + '/#!password';
-        var html = 'Click the link to reset your password <br><a href="' + url + '/' +
+        const url = config.url + '/#!password';
+        const html = 'Click the link to reset your password <br><a href="' + url + '/' +
             user.accessToken.id + '">' + url + '/' +
             user.accessToken.id + '</a>';
         console.log('html', html);
@@ -274,7 +274,7 @@ module.exports = function (User, Role, RoleMapping) {
                         next(err);
                     }
                     else {
-                        let html = '<div style="text-align: center"><h3>Good News</h3>' +
+                        const html = '<div style="text-align: center"><h3>Good News</h3>' +
                             '<p> We have just approved your account. ' +
                             'You can play ' + config.name + ' the game whenever you want.</p></div>';
                         transport.sendMail({

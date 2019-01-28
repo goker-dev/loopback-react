@@ -58,15 +58,34 @@
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "$everyone",
-      "permission": "DENY",
+      "permission": "ALLOW",
       "property": "*"
+    },
+    {
+      "accessType": "READ",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW"
     },
     {
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "admin",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "admin",
       "permission": "ALLOW",
-      "property": "*"
+      "property": "toggleAdmin"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "editor",
+      "permission": "ALLOW",
+      "property": "toggleEditor"
     }
   ],
   "methods": {

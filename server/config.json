@@ -3,7 +3,7 @@
   "url": "http://localhost:3003",
   "fromMail": "info@localhost",
   "restApiRoot": "/api",
-  "initialData": true,
+  "initialData": false,
   "host": "0.0.0.0",
   "port": 3003,
   "mandrillApiKey": "",
