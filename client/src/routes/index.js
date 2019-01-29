@@ -4,6 +4,8 @@ import App from '../components/App';
 import SignUp from '../components/Auth/SignUp';
 import SignIn from '../components/Auth/SignIn';
 import SignOut from '../components/Auth/SignOut';
+import Reset from '../components/Auth/Reset';
+import NewPassword from '../components/Auth/NewPassword';
 import Welcome from '../components/Welcome';
 import Features from '../components/Features';
 import Home from '../components/Home';
@@ -27,6 +29,8 @@ const Routes = () => {
         <Route exact path="/signin" component={SignIn}/>
         <Route exact path="/signout" component={SignOut}/>
         <Route exact path="/signup" component={SignUp}/>
+        <Route exact path="/reset" component={Reset}/>
+        <Route exact path="/newpassword/:token" component={NewPassword}/>
         <Route exact path="/home" component={Home}/>
 
         <Route exact path="/profile" component={Profile} username="me"/>

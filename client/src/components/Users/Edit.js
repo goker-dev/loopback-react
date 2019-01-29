@@ -53,7 +53,7 @@ const FormikForm = ({
 
 class EnhancedForm extends Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             user: {
                 id: '',
@@ -79,7 +79,7 @@ class EnhancedForm extends Component {
     }
 
     componentDidMount() {
-        if (!this.props.me || !this.props.me.isEditor)
+        if (!this.props.me || (!this.props.me.isAdmin && !this.props.me.isEditor))
             return History.goBack();
         this.getUserData(this.props.match.params.id)
     }

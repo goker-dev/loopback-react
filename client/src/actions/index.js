@@ -58,6 +58,30 @@ export const signOut = () => {
     return {type: type.UNAUTH_USER, me: false};
 };
 
+export const resetPasswordRequest = (email) => {
+    return async () => {
+        await axios.post(`${API_URL}/users/reset`, {email})
+            .then(() => {
+            })
+            .catch(error => {
+                throw error && error.response && error.response.data.error.message;
+            });
+    };
+};
+
+export const resetPassword = ({token, password}) => {
+    return async () => {
+        await axios.post(`${API_URL}/users/reset-password`, {newPassword: password}, {
+            headers: {authorization: token}
+        })
+            .then(() => {
+            })
+            .catch(error => {
+                throw error && error.response && error.response.data.error.message;
+            });
+    };
+};
+
 function computeUser(user) {
     user.isAdmin = user.roles.find(x => x.name === 'admin');
     user.isEditor = user.roles.find(x => x.name === 'editor');
@@ -120,6 +144,18 @@ export const getSession = (callback) => {
                 });
         }
     } else callback(null)
+};
+
+export const addUser = (...data) => {
+    return async () => {
+        await axios.post(`${API_URL}/users`, ...data)
+            .then(() => {
+                History.push('/users');
+            })
+            .catch(error => {
+                throw error && error.response && error.response.data.error.message;
+            });
+    };
 };
 
 export const settingsAccount = (...data) => {

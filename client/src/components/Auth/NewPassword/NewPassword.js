@@ -2,7 +2,7 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import {Field, Form, withFormik} from 'formik'
 import * as Yup from 'yup'
-import {signIn} from '../../../actions'
+import {resetPassword} from '../../../actions'
 import {connect} from 'react-redux'
 
 const FormikForm = ({
@@ -17,16 +17,16 @@ const FormikForm = ({
             <div className="row h-100 justify-content-md-center">
                 <div className="col-sm-4 my-auto">
                     <Form className="card border-0 p-4 shadow">
-                        <h1 className="h4 lined"><span>SIGN IN</span></h1>
+                        <h1 className="h4 lined"><span>NEW PASSWORD</span></h1>
                         <fieldset className="form-group">
-                            <label className="small">Username or Email</label>
-                            <Field className="form-control" type="text" name="username" placeholder="Username"/>
-                            {touched.email && errors.email &&
-                            <small className="form-text text-danger">{errors.email}</small>}
+                            <label className="small">Token</label>
+                            <Field className="form-control" type="text" name="token" placeholder="token"/>
+                            {touched.token && errors.token &&
+                            <small className="form-text text-danger">{errors.token}</small>}
                         </fieldset>
                         <fieldset className="form-group">
                             <label className="small">Password</label>
-                            <Field className="form-control" type="password" name="password" placeholder="Password"/>
+                            <Field className="form-control" type="password" name="password" placeholder="password"/>
                             {touched.password && errors.password &&
                             <small className="form-text text-danger">{errors.password}</small>}
                         </fieldset>
@@ -37,12 +37,9 @@ const FormikForm = ({
                             <small>{status.success}</small>
                         </div>}
                         <button className="btn btn-primary w-100" type="submit" disabled={isSubmitting}>
-                            {isSubmitting && <span><i className="fa fa-circle-notch fa-spin"></i>&nbsp;</span>}
-                            Login
+                            {isSubmitting && <span><i className="fa fa-circle-notch fa-spin"/>&nbsp;</span>}
+                            Set my new password
                         </button>
-                        <p className="pt-4 text-center small">You can <Link to="/signup">sign up</Link> easly
-                            if you don't have an account yet. Or you have an issue about sign in you can
-                            reset your password <Link to="/reset">here</Link></p>
                     </Form>
                 </div>
             </div>
@@ -51,40 +48,35 @@ const FormikForm = ({
 );
 
 const EnhancedForm = withFormik({
-    mapPropsToValues({username}) {
+    mapPropsToValues({match}) {
         return {
-            username: username || '',
+            token: match.params.token,
             password: ''
         }
     },
     validationSchema: Yup.object().shape({
-        username: Yup.string().required('Email/username is required'),
-        // password: Yup.string().min(8, 'Password must be 8 characters or longer')
-        //   .matches(/[a-z]/, 'Password must contain at least one lowercase char')
-        //   .matches(/[A-Z]/, 'Password must contain at least one uppercase char')
-        //   .matches(/[a-zA-Z]+[^a-zA-Z\s]+/, 'at least 1 number or special char (@,!,#, etc).'),
+        //email: Yup.string().email('Please write a correct email address').required('Email is required'),
     }),
     async handleSubmit(values, {props, resetForm, setFieldError, setSubmitting, setStatus}) {
         setStatus(null);
-        if (values.username.match(/^[A-z0-9._%+-]+@[A-z0-9.-]+\.[A-z0-9.]{2,}$/))
-            values = {email: values.username, password: values.password};
         try {
-            await props.signIn(values);
+            await props.resetPassword(values);
             setSubmitting(false);
-            setStatus({'success': 'You logged in successfully!'});
+            setStatus({'success': 'Done.'});
         } catch (errors) {
             setStatus({'error': errors});
             setSubmitting(false);
         }
     }
-})(FormikForm)
+})(FormikForm);
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        signIn: async (values) => {
-            await dispatch(signIn(values));
+        resetPassword: async (values) => {
+            await dispatch(resetPassword(values));
         },
     }
-}
+};
+
 
 export default connect(null, mapDispatchToProps)(EnhancedForm);
