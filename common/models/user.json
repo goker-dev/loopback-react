@@ -58,13 +58,19 @@
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "$everyone",
-      "permission": "ALLOW",
+      "permission": "DENY",
       "property": "*"
     },
     {
       "accessType": "READ",
       "principalType": "ROLE",
       "principalId": "$authenticated",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "editor",
       "permission": "ALLOW"
     },
     {
@@ -84,8 +90,50 @@
       "accessType": "EXECUTE",
       "principalType": "ROLE",
       "principalId": "editor",
+      "permission": "DENY",
+      "property": "toggleAdmin"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "admin",
       "permission": "ALLOW",
       "property": "toggleEditor"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "editor",
+      "permission": "ALLOW",
+      "property": "toggleEditor"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW",
+      "property": "toggleManager"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "editor",
+      "permission": "ALLOW",
+      "property": "toggleManager"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW",
+      "property": "toggleWorker"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "editor",
+      "permission": "ALLOW",
+      "property": "toggleWorker"
     }
   ],
   "methods": {
@@ -206,6 +254,38 @@
       },
       "http": {
         "path": "/:id/toggleEditor",
+        "verb": "post"
+      }
+    },
+    "toggleManager": {
+      "accepts": [
+        {
+          "arg": "id",
+          "type": "string"
+        }
+      ],
+      "returns": {
+        "arg": "data",
+        "type": "object"
+      },
+      "http": {
+        "path": "/:id/toggleManager",
+        "verb": "post"
+      }
+    },
+    "toggleWorker": {
+      "accepts": [
+        {
+          "arg": "id",
+          "type": "string"
+        }
+      ],
+      "returns": {
+        "arg": "data",
+        "type": "object"
+      },
+      "http": {
+        "path": "/:id/toggleWorker",
         "verb": "post"
       }
     }

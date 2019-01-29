@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
 import {Field, Form, Formik} from 'formik'
 import * as Yup from 'yup'
-import {getUser, toggleAdmin, toggleEditor, updateUser} from '../../actions'
+import {getUser, toggleAdmin, toggleEditor, toggleManager, toggleWorker, updateUser} from '../../actions'
 import {connect} from 'react-redux'
 import History from "../../history";
-
 
 const FormikForm = ({
                         values,
@@ -47,7 +46,7 @@ const FormikForm = ({
         </div>}
         <input type="hidden" name="id" value={values.id}/>
         <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
-            {isSubmitting && <span><i className="fa fa-circle-notch fa-spin"></i>&nbsp;</span>}
+            {isSubmitting && <span><i className="fa fa-circle-notch fa-spin"/>&nbsp;</span>}
             Update the Account
         </button>
     </Form>);
@@ -89,7 +88,7 @@ class EnhancedForm extends Component {
         setStatus(null);
         try {
             await updateUser(values);
-            setStatus({'success': 'Your account has been updated successfully!'})
+            setStatus({'success': 'Your account has been updated successfully!'});
             setSubmitting(false);
         } catch (errors) {
             setStatus({'error': errors})
@@ -131,11 +130,45 @@ class EnhancedForm extends Component {
         }
     }
 
+    async toggleManager(e) {
+        let el = e.currentTarget;
+        document.getElementById('errorMessage').innerHTML = '';
+        el.disabled = true;
+        el.getElementsByTagName('i')[0].className = 'fa fa-circle-notch fa-spin';
+        try {
+            let data = await toggleManager(el.dataset.id, el.dataset.fk);
+            el.disabled = false;
+            el.getElementsByTagName('i')[0].className = 'fa fa-user-tie';
+            el.className = data && data.id ? 'btn btn-warning ml-1' : 'btn btn-secondary ml-1';
+        } catch (error) {
+            el.disabled = false;
+            el.getElementsByTagName('i')[0].className = 'fa fa-user-tie';
+            document.getElementById('errorMessage').innerHTML = '<div class="alert alert-danger">' + error + '</div>';
+        }
+    }
+
+    async toggleWorker(e) {
+        let el = e.currentTarget;
+        document.getElementById('errorMessage').innerHTML = '';
+        el.disabled = true;
+        el.getElementsByTagName('i')[0].className = 'fa fa-circle-notch fa-spin';
+        try {
+            let data = await toggleWorker(el.dataset.id, el.dataset.fk);
+            el.disabled = false;
+            el.getElementsByTagName('i')[0].className = 'fa fa-user-tie';
+            el.className = data && data.id ? 'btn btn-warning ml-1' : 'btn btn-secondary ml-1';
+        } catch (error) {
+            el.disabled = false;
+            el.getElementsByTagName('i')[0].className = 'fa fa-user-tie';
+            document.getElementById('errorMessage').innerHTML = '<div class="alert alert-danger">' + error + '</div>';
+        }
+    }
+
     render() {
         const adminRole = this.state.user.roles.find(x => x.name === 'admin');
         const editorRole = this.state.user.roles.find(x => x.name === 'editor');
-        const managerRole = this.state.user.roles.find(x => x.name === 'editor');
-        const workerRole = this.state.user.roles.find(x => x.name === 'editor');
+        const managerRole = this.state.user.roles.find(x => x.name === 'manager');
+        const workerRole = this.state.user.roles.find(x => x.name === 'worker');
         return (
             <div className="row justify-content-md-center">
                 <div className="col-md-6">
@@ -161,23 +194,23 @@ class EnhancedForm extends Component {
                     <div>
                         <div id="errorMessage"/>
                         <button data-id={this.state.user.id} data-fk={adminRole && adminRole.id}
-                                className={adminRole ? 'btn btn-danger' : 'btn btn-secondary'}
+                                className={adminRole ? 'btn btn-primary' : 'btn btn-default'}
                                 onClick={(e) => this.toggleAdmin(e)}>
                             <i className="fa fa-user-astronaut"/> Admin
                         </button>
                         <button data-id={this.state.user.id} data-fk={editorRole && editorRole.id}
-                                className={editorRole ? 'btn btn-warning ml-1' : 'btn ml-1'}
+                                className={editorRole ? 'btn btn-primary ml-1' : 'btn btn-default ml-1'}
                                 onClick={(e) => this.toggleEditor(e)}>
                             <i className="fa fa-user-secret"/> Editor
                         </button>
                         <button data-id={this.state.user.id} data-fk={managerRole && managerRole.id}
-                                className={managerRole ? 'btn btn-warning ml-1' : 'btn ml-1'}
-                                onClick={(e) => this.toggleEditor(e)}>
+                                className={managerRole ? 'btn btn-primary ml-1' : 'btn btn-default ml-1'}
+                                onClick={(e) => this.toggleManager(e)}>
                             <i className="fa fa-user-tie"/> Manager
                         </button>
                         <button data-id={this.state.user.id} data-fk={workerRole && workerRole.id}
-                                className={workerRole ? 'btn btn-warning ml-1' : 'btn ml-1'}
-                                onClick={(e) => this.toggleEditor(e)}>
+                                className={workerRole ? 'btn btn-primary ml-1' : 'btn btn-default ml-1'}
+                                onClick={(e) => this.toggleWorker(e)}>
                             <i className="fa fa-user-tie"/> Worker
                         </button>
                     </div>

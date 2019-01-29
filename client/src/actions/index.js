@@ -203,6 +203,33 @@ export const toggleEditor = (id) => {
     });
 };
 
+
+export const toggleManager = (id) => {
+    return new Promise((resolve, reject) => {
+        axios.post(`${API_URL}/users/${id}/toggleManager`, {id},
+            {headers: {authorization: TOKEN}})
+            .then(response => {
+                resolve(response.data.data)
+            })
+            .catch(error => {
+                reject(error.response.data.error.message);
+            });
+    });
+};
+
+export const toggleWorker = (id) => {
+    return new Promise((resolve, reject) => {
+        axios.post(`${API_URL}/users/${id}/toggleWorker`, {id},
+            {headers: {authorization: TOKEN}})
+            .then(response => {
+                resolve(response.data.data)
+            })
+            .catch(error => {
+                reject(error.response.data.error.message);
+            });
+    });
+};
+
 export const uploadCoverImage = (file) => {
     return async (dispatch) => {
         await axios.post(`${API_URL}/users/${UID}/cover`, file, {
