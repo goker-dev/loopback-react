@@ -84,6 +84,6 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(settingsChangePassword(values));
     },
   }
-}
+};
 
 export default connect(null, mapDispatchToProps)(EnhancedForm);

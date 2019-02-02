@@ -20,8 +20,8 @@ export const signUp = (...data) => {
 };
 
 export const setSession = (response) => {
-    response.isAdmin = response.roles.find(x => x.name === 'admin') ? true : false;
-    response.isEditor = response.roles.find(x => x.name === 'editor') ? true : false;
+    response.isAdmin = response.roles.find(x => x.name === 'admin');
+    response.isEditor = response.roles.find(x => x.name === 'editor');
     sessionStorage.setItem('me', JSON.stringify(response))
     return response;
 };
@@ -107,6 +107,25 @@ export const getUser = (uid) => {
                 reject(error.response.data.error)
             });
     });
+};
+
+export const fetchUser = (id) => {
+    console.log('fetchUser', id);
+    return async (dispatch) => {
+        axios.get(`${API_URL}/users/${id}`, {
+            headers: {authorization: localStorage.getItem('token')}
+        })
+            .then(response => {
+                console.log('fetchUser dispatch', response.data);
+                dispatch({type: type.GET_USER_SUCCESS, payload: computeUser(response.data)});
+            })
+            .catch(error => {
+                dispatch({
+                    type: type.GET_USER_ERROR,
+                    payload: error.response && error.response.data && error.response.data.error.message
+                });
+            });
+    }
 };
 
 export const getProfile = (username) => {
@@ -213,57 +232,39 @@ export const updateUser = async (data) => {
         });
 };
 
-export const toggleAdmin = (id) => {
-    return new Promise((resolve, reject) => {
-        axios.post(`${API_URL}/users/${id}/toggleAdmin`, {id},
+export const toggleAdmin = (id, toggleType = 'Admin') => {
+    return (dispatch) => {
+        axios.post(`${API_URL}/users/${id}/toggle${toggleType}`, {id},
             {headers: {authorization: TOKEN}})
             .then(response => {
-                resolve(response.data.data)
+                console.log('toggleType', toggleType, response.data.data.status, computeUser(response.data.data));
+                dispatch({type: type.GET_USER_SUCCESS, payload: computeUser(response.data.data)});
             })
             .catch(error => {
-                reject(error.response.data.error.message);
+                console.log('toggleType error ', toggleType, error);
+                dispatch({
+                    type: type.GET_USER_ERROR,
+                    payload: error.response && error.response.data && error.response.data.error.message
+                });
             });
-    });
+    }
 };
 
 export const toggleEditor = (id) => {
-    return new Promise((resolve, reject) => {
-        axios.post(`${API_URL}/users/${id}/toggleEditor`, {id},
-            {headers: {authorization: TOKEN}})
-            .then(response => {
-                resolve(response.data.data)
-            })
-            .catch(error => {
-                reject(error.response.data.error.message);
-            });
-    });
+    return toggleAdmin(id, 'Editor')
 };
 
-
 export const toggleManager = (id) => {
-    return new Promise((resolve, reject) => {
-        axios.post(`${API_URL}/users/${id}/toggleManager`, {id},
-            {headers: {authorization: TOKEN}})
-            .then(response => {
-                resolve(response.data.data)
-            })
-            .catch(error => {
-                reject(error.response.data.error.message);
-            });
-    });
+    return toggleAdmin(id, 'Manager')
 };
 
 export const toggleWorker = (id) => {
-    return new Promise((resolve, reject) => {
-        axios.post(`${API_URL}/users/${id}/toggleWorker`, {id},
-            {headers: {authorization: TOKEN}})
-            .then(response => {
-                resolve(response.data.data)
-            })
-            .catch(error => {
-                reject(error.response.data.error.message);
-            });
-    });
+    return toggleAdmin(id, 'Worker')
+};
+
+export const toggleStatus = (id) => {
+    console.log('action toggleStatus');
+    return toggleAdmin(id, 'Status')
 };
 
 export const uploadCoverImage = (file) => {

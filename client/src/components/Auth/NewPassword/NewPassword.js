@@ -1,5 +1,4 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
 import {Field, Form, withFormik} from 'formik'
 import * as Yup from 'yup'
 import {resetPassword} from '../../../actions'

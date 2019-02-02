@@ -32,6 +32,10 @@
     "adminVerified": {
       "type": "boolean",
       "default": false
+    },
+    "status": {
+      "type": "boolean",
+      "default": true
     }
   },
   "validations": [
@@ -134,6 +138,13 @@
       "principalId": "editor",
       "permission": "ALLOW",
       "property": "toggleWorker"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "editor",
+      "permission": "ALLOW",
+      "property": "toggleStatus"
     }
   ],
   "methods": {
@@ -286,6 +297,22 @@
       },
       "http": {
         "path": "/:id/toggleWorker",
+        "verb": "post"
+      }
+    },
+    "toggleStatus": {
+      "accepts": [
+        {
+          "arg": "id",
+          "type": "string"
+        }
+      ],
+      "returns": {
+        "arg": "data",
+        "type": "object"
+      },
+      "http": {
+        "path": "/:id/toggleStatus",
         "verb": "post"
       }
     }

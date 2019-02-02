@@ -26,12 +26,22 @@ module.exports = function (app) {
                                 roleId: role.id
                             }, function (err, principal) {
                                 if (err) cb(err);
-                                cb(null, principal);
+                                User.findById(id, function (err, user) {
+                                    if (err) {
+                                        cb(err);
+                                    }
+                                    cb(null, user);
+                                });
                             });
                         else
                             RoleMapping.destroyById(principal[0].id, function (err, principal) {
                                 if (err) cb(err);
-                                cb(null, principal);
+                                User.findById(id, function (err, user) {
+                                    if (err) {
+                                        cb(err);
+                                    }
+                                    cb(null, user);
+                                });
                             });
                     });
                 });
@@ -53,5 +63,27 @@ module.exports = function (app) {
 
     User.toggleWorker = function (id, cb) {
         setACL(id, cb, 'worker');
+    };
+
+    User.toggleStatus = function (id, cb) {
+        User.findById(id, function (err, user) {
+            if (err) {
+                cb(err);
+            } else {
+                user.status = !user.status;
+                user.save(function (err) {
+                    if (err) {
+                        cb(err);
+                    } else {
+                        User.findById(id, function (err, user) {
+                            if (err) {
+                                cb(err);
+                            }
+                            cb(null, user);
+                        });
+                    }
+                });
+            }
+        });
     }
 };

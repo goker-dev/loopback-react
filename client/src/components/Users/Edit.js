@@ -1,9 +1,18 @@
 import React, {Component} from 'react';
 import {Field, Form, Formik} from 'formik'
 import * as Yup from 'yup'
-import {getUser, toggleAdmin, toggleEditor, toggleManager, toggleWorker, updateUser} from '../../actions'
+import {
+    fetchUser,
+    getUser,
+    toggleAdmin,
+    toggleEditor,
+    toggleManager,
+    toggleStatus,
+    toggleWorker,
+    updateUser
+} from '../../actions'
 import {connect} from 'react-redux'
-import History from "../../history";
+import ToggleButton from "../Common/ToggleButton";
 
 const FormikForm = ({
                         values,
@@ -55,15 +64,17 @@ class EnhancedForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: {
-                id: '',
-                username: '',
-                email: '',
-                name: '',
-                surname: '',
-                bio: '',
-                roles: []
-            }
+            user: props.user || {},
+            // user: {
+            //     id: '',
+            //     username: '',
+            //     email: '',
+            //     name: '',
+            //     surname: '',
+            //     bio: '',
+            //     roles: []
+            // },
+            error: null
         }
     }
 
@@ -79,10 +90,19 @@ class EnhancedForm extends Component {
     }
 
     componentDidMount() {
-        if (!this.props.me || (!this.props.me.isAdmin && !this.props.me.isEditor))
-            return History.goBack();
-        this.getUserData(this.props.match.params.id)
+        this.props.getUser(this.props.match.params.id);
+        // if (!this.props.me || (!this.props.me.isAdmin && !this.props.me.isEditor))
+        //     return History.goBack();
+        // this.getUserData(this.props.match.params.id)
     }
+
+    componentWillReceiveProps = (props) => {
+        console.log('componentWillReceiveProps', props);
+        this.setState({
+            user: props.user,
+            loading: false
+        });
+    };
 
     async handleSubmit(values, {props, setFieldError, setSubmitting, setStatus}) {
         setStatus(null);
@@ -96,79 +116,48 @@ class EnhancedForm extends Component {
         }
     }
 
-    async toggleAdmin(e) {
-        let el = e.currentTarget;
-        document.getElementById('errorMessage').innerHTML = '';
-        el.disabled = true;
-        el.getElementsByTagName('i')[0].className = 'fa fa-circle-notch fa-spin';
-        try {
-            let data = await toggleAdmin(el.dataset.id, el.dataset.fk);
-            el.disabled = false;
-            el.getElementsByTagName('i')[0].className = 'fa fa-user-secret';
-            el.className = data && data.id ? 'btn btn-danger' : 'btn btn-secondary';
-        } catch (error) {
-            el.disabled = false;
-            el.getElementsByTagName('i')[0].className = 'fa fa-user-secret';
-            document.getElementById('errorMessage').innerHTML = '<div class="alert alert-danger">' + error + '</div>';
-        }
+    toggleAdmin(id) {
+        this.setState({
+            error: null,
+        });
+        this.props.toggleAdmin(id)
     }
 
-    async toggleEditor(e) {
-        let el = e.currentTarget;
-        document.getElementById('errorMessage').innerHTML = '';
-        el.disabled = true;
-        el.getElementsByTagName('i')[0].className = 'fa fa-circle-notch fa-spin';
-        try {
-            let data = await toggleEditor(el.dataset.id, el.dataset.fk);
-            el.disabled = false;
-            el.getElementsByTagName('i')[0].className = 'fa fa-user-tie';
-            el.className = data && data.id ? 'btn btn-warning ml-1' : 'btn btn-secondary ml-1';
-        } catch (error) {
-            el.disabled = false;
-            el.getElementsByTagName('i')[0].className = 'fa fa-user-tie';
-            document.getElementById('errorMessage').innerHTML = '<div class="alert alert-danger">' + error + '</div>';
-        }
+    toggleEditor(id) {
+        this.setState({
+            error: null,
+        });
+        this.props.toggleEditor(id)
     }
 
-    async toggleManager(e) {
-        let el = e.currentTarget;
-        document.getElementById('errorMessage').innerHTML = '';
-        el.disabled = true;
-        el.getElementsByTagName('i')[0].className = 'fa fa-circle-notch fa-spin';
-        try {
-            let data = await toggleManager(el.dataset.id, el.dataset.fk);
-            el.disabled = false;
-            el.getElementsByTagName('i')[0].className = 'fa fa-user-tie';
-            el.className = data && data.id ? 'btn btn-warning ml-1' : 'btn btn-secondary ml-1';
-        } catch (error) {
-            el.disabled = false;
-            el.getElementsByTagName('i')[0].className = 'fa fa-user-tie';
-            document.getElementById('errorMessage').innerHTML = '<div class="alert alert-danger">' + error + '</div>';
-        }
+    toggleManager(id) {
+        this.setState({
+            error: null,
+        });
+        this.props.toggleManager(id)
     }
 
-    async toggleWorker(e) {
-        let el = e.currentTarget;
-        document.getElementById('errorMessage').innerHTML = '';
-        el.disabled = true;
-        el.getElementsByTagName('i')[0].className = 'fa fa-circle-notch fa-spin';
-        try {
-            let data = await toggleWorker(el.dataset.id, el.dataset.fk);
-            el.disabled = false;
-            el.getElementsByTagName('i')[0].className = 'fa fa-user-tie';
-            el.className = data && data.id ? 'btn btn-warning ml-1' : 'btn btn-secondary ml-1';
-        } catch (error) {
-            el.disabled = false;
-            el.getElementsByTagName('i')[0].className = 'fa fa-user-tie';
-            document.getElementById('errorMessage').innerHTML = '<div class="alert alert-danger">' + error + '</div>';
-        }
+    toggleWorker(id) {
+        this.setState({
+            error: null,
+        });
+        this.props.toggleWorker(id)
     }
+
+    toggleStatus(id) {
+        this.setState({
+            error: null,
+        });
+        this.props.toggleStatus(id)
+    }
+
 
     render() {
-        const adminRole = this.state.user.roles.find(x => x.name === 'admin');
-        const editorRole = this.state.user.roles.find(x => x.name === 'editor');
-        const managerRole = this.state.user.roles.find(x => x.name === 'manager');
-        const workerRole = this.state.user.roles.find(x => x.name === 'worker');
+        // const adminRole = this.state.user.roles.find(x => x.name === 'admin');
+        // const editorRole = this.state.user.roles.find(x => x.name === 'editor');
+        // const managerRole = this.state.user.roles.find(x => x.name === 'manager');
+        // const workerRole = this.state.user.roles.find(x => x.name === 'worker');
+        console.log('render edit', this.state.user.status, this.props.user && this.props.user.status);
         return (
             <div className="row justify-content-md-center">
                 <div className="col-md-6">
@@ -192,27 +181,40 @@ class EnhancedForm extends Component {
                             onSubmit={this.handleSubmit}/>
                     <hr/>
                     <div>
-                        <div id="errorMessage"/>
-                        <button data-id={this.state.user.id} data-fk={adminRole && adminRole.id}
-                                className={adminRole ? 'btn btn-primary' : 'btn btn-default'}
-                                onClick={(e) => this.toggleAdmin(e)}>
-                            <i className="fa fa-user-astronaut"/> Admin
-                        </button>
-                        <button data-id={this.state.user.id} data-fk={editorRole && editorRole.id}
-                                className={editorRole ? 'btn btn-primary ml-1' : 'btn btn-default ml-1'}
-                                onClick={(e) => this.toggleEditor(e)}>
-                            <i className="fa fa-user-secret"/> Editor
-                        </button>
-                        <button data-id={this.state.user.id} data-fk={managerRole && managerRole.id}
-                                className={managerRole ? 'btn btn-primary ml-1' : 'btn btn-default ml-1'}
-                                onClick={(e) => this.toggleManager(e)}>
-                            <i className="fa fa-user-tie"/> Manager
-                        </button>
-                        <button data-id={this.state.user.id} data-fk={workerRole && workerRole.id}
-                                className={workerRole ? 'btn btn-primary ml-1' : 'btn btn-default ml-1'}
-                                onClick={(e) => this.toggleWorker(e)}>
-                            <i className="fa fa-user-tie"/> Worker
-                        </button>
+                        {this.state.error && <div className="alert alert-danger" role="alert">{this.state.error}</div>}
+                        <table className="table">
+                            <tbody>
+                                <tr>
+                                    <th>Admin</th>
+                                    <th>Editor</th>
+                                    <th>Manager</th>
+                                    <th>Worker</th>
+                                    <th>Status</th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <ToggleButton status={this.state.user.isAdmin}
+                                                      toggleFunction={() => this.toggleAdmin(this.state.user.id)}/>
+                                    </td>
+                                    <td>
+                                        <ToggleButton status={this.state.user.isEditor}
+                                                      toggleFunction={() => this.toggleEditor(this.state.user.id)}/>
+                                    </td>
+                                    <td>
+                                        <ToggleButton status={this.state.user.isManager}
+                                                      toggleFunction={() => this.toggleManager(this.state.user.id)}/>
+                                    </td>
+                                    <td>
+                                        <ToggleButton status={this.state.user.isWorker}
+                                                      toggleFunction={() => this.toggleWorker(this.state.user.id)}/>
+                                    </td>
+                                    <td>
+                                        <ToggleButton status={this.state.user.status}
+                                                      toggleFunction={() => this.toggleStatus(this.state.user.id)}/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>)
@@ -220,7 +222,32 @@ class EnhancedForm extends Component {
 }
 
 const mapStateToProps = (state) => {
-    return {me: state.auth.me}
-}
+    console.log('mapStateToProps', state.user.data && state.user.data.status);
+    return {me: state.auth.me, user: state.user.data}
+};
 
-export default connect(mapStateToProps, null)(EnhancedForm);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getUser: (values) => {
+            dispatch(fetchUser(values));
+        },
+        toggleAdmin: (values) => {
+            dispatch(toggleAdmin(values));
+        },
+        toggleEditor: (values) => {
+            dispatch(toggleEditor(values));
+        },
+        toggleManager: (values) => {
+            dispatch(toggleManager(values));
+        },
+        toggleWorker: (values) => {
+            dispatch(toggleWorker(values));
+        },
+        toggleStatus: (values) => {
+            console.log('dispatch toggleStatus');
+            dispatch(toggleStatus(values));
+        },
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(EnhancedForm);

@@ -176,6 +176,7 @@ module.exports = function (User) {
                 return next(err);
             }
             console.log('USER', user);
+            user.status = true;
             user.verificationToken = token;
             user.save(function (err) {
                 if (err) {
