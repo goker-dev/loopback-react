@@ -5,14 +5,14 @@ import * as Yup from 'yup'
 import {signIn} from '../../../actions'
 import {connect} from 'react-redux'
 
+let setSubmittingHigher;
 const FormikForm = ({
                         values,
                         touched,
                         errors,
-                        status,
                         isSubmitting
                     }) => (
-    <section className="cover  bg-light">
+    <section className="cover bg-light">
         <div className="container">
             <div className="row h-100 justify-content-md-center">
                 <div className="col-sm-4 my-auto">
@@ -30,14 +30,8 @@ const FormikForm = ({
                             {touched.password && errors.password &&
                             <small className="form-text text-danger">{errors.password}</small>}
                         </fieldset>
-                        {status && status.error && <div className="alert alert-danger">
-                            <small>{status.error}</small>
-                        </div>}
-                        {status && status.success && <div className="alert alert-success">
-                            <small>{status.success}</small>
-                        </div>}
                         <button className="btn btn-primary w-100" type="submit" disabled={isSubmitting}>
-                            {isSubmitting && <span><i className="fa fa-circle-notch fa-spin"></i>&nbsp;</span>}
+                            {isSubmitting && <span><i className="fa fa-circle-notch fa-spin"/>&nbsp;</span>}
                             Login
                         </button>
                         <p className="pt-4 text-center small">You can <Link to="/signup">sign up</Link> easly
@@ -64,27 +58,25 @@ const EnhancedForm = withFormik({
         //   .matches(/[A-Z]/, 'Password must contain at least one uppercase char')
         //   .matches(/[a-zA-Z]+[^a-zA-Z\s]+/, 'at least 1 number or special char (@,!,#, etc).'),
     }),
-    async handleSubmit(values, {props, resetForm, setFieldError, setSubmitting, setStatus}) {
-        setStatus(null);
+    handleSubmit(values, {props, resetForm, setFieldError, setSubmitting}) {
         if (values.username.match(/^[A-z0-9._%+-]+@[A-z0-9.-]+\.[A-z0-9.]{2,}$/))
             values = {email: values.username, password: values.password};
-        try {
-            await props.signIn(values);
-            setSubmitting(false);
-            setStatus({'success': 'You logged in successfully!'});
-        } catch (errors) {
-            setStatus({'error': errors});
-            setSubmitting(false);
-        }
-    }
-})(FormikForm)
+        setSubmittingHigher = setSubmitting;
+        props.signIn(values);
+    },
+})(FormikForm);
+
+const mapStateToProps = (state) => {
+    typeof setSubmittingHigher === 'function' && setSubmittingHigher(false);
+    return {system: state.system}
+};
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        signIn: async (values) => {
-            await dispatch(signIn(values));
+        signIn: (values) => {
+            dispatch(signIn(values));
         },
     }
-}
+};
 
-export default connect(null, mapDispatchToProps)(EnhancedForm);
+export default connect(mapStateToProps, mapDispatchToProps)(EnhancedForm);

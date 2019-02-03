@@ -2,8 +2,6 @@ import React, {Component} from 'react';
 import {uploadCoverImage, uploadProfileImage} from '../../actions'
 import {connect} from 'react-redux'
 
-const FILE_URL = process.env.REACT_APP_FILE_URL;
-
 class Images extends Component {
     constructor(props) {
         super(props);
@@ -17,9 +15,10 @@ class Images extends Component {
     }
 
     componentWillReceiveProps(props) {
-        this.setState({
-            me: props.me
-        })
+        if (this.props.me !== props.me)
+            this.setState({
+                me: props.me
+            })
     }
 
     static handleBrowseFile(e) {
@@ -32,7 +31,6 @@ class Images extends Component {
     }
 
     async handleImageUpload(id, file) {
-        console.log('id', id);
         this.setState({status: '', isUploadingCover: id === 'cover', isUploadingProfile: id === 'profile'});
         const formData = new FormData();
         formData.append('file', file, file.name);
@@ -61,7 +59,7 @@ class Images extends Component {
                     onClick={Images.handleBrowseFile}>
                 <span className="loader"><i className="fa fa-spinner fa-spin fa-3x"/></span>
                 {this.state.me.cover && this.state.me.cover.normal &&
-                <img src={FILE_URL + this.state.me.cover.normal} alt={this.state.me.name}/>
+                <img src={this.state.me.cover.normal} alt={this.state.me.name}/>
                 }
                 <div className="image-input">
                     <input type="file" id="cover" name="image" onChange={this.handleFileChange}/>
@@ -71,7 +69,7 @@ class Images extends Component {
                         onClick={Images.handleBrowseFile}>
                     <span className="loader"><i className="fa fa-spinner fa-spin fa-3x"/></span>
                     {this.state.me.image && this.state.me.image.normal &&
-                    <img src={FILE_URL + this.state.me.image.normal} alt={this.state.me.name}/>
+                    <img src={this.state.me.image.normal} alt={this.state.me.name}/>
                     }
                     <div className="image-input">
                         <input type="file" id="profile" name="image" onChange={this.handleFileChange}/>
@@ -97,6 +95,6 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(uploadProfileImage(values));
         },
     }
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Images);

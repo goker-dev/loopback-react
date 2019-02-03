@@ -4,8 +4,6 @@ import {connect} from 'react-redux';
 import {getUser} from "../../actions";
 import History from "../../history";
 
-const FILE_URL = process.env.REACT_APP_FILE_URL;
-
 
 class User extends Component {
     constructor(props) {
@@ -42,17 +40,16 @@ class User extends Component {
         const user = this.state.user;
         if (!user) return <div className="profile">User not found!</div>;
         const fullName = user.name + ' ' + user.surname;
-        console.log('fileurl', FILE_URL);
         return <section className="container">
             <div className="profile">
                 <div className="fb-profile">
                     <img align="left" className="fb-image-lg img-fluid"
                          onError={(e)=>{e.target.onerror = null; e.target.src="http://holder.ninja/1200x360,cover-1200x360.svg"}}
-                         src={FILE_URL + (user.cover && user.cover.normal)}
+                         src={(user.cover && user.cover.normal)}
                          alt="{fullName}"/>
                     <img align="left" className="fb-image-profile img-thumbnail"
                          onError={(e)=>{e.target.onerror = null; e.target.src="http://holder.ninja/180x180,profile.svg"}}
-                         src={FILE_URL + (user.image && user.image.normal)}
+                         src={(user.image && user.image.normal)}
                          alt="{fullName}"/>
                     <div className="fb-profile-text">
                         <h1>{fullName}</h1>

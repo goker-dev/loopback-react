@@ -72,79 +72,59 @@
       "permission": "ALLOW"
     },
     {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$owner",
+      "permission": "ALLOW",
+      "property": [
+        "image",
+        "cover"
+      ]
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW",
+      "property": [
+        "toggleAdmin",
+        "toggleEditor",
+        "toggleManager",
+        "toggleWorker",
+        "toggleStatus"
+      ]
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW",
+      "property": "*"
+    },
+    {
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "editor",
-      "permission": "ALLOW"
-    },
-    {
-      "accessType": "*",
-      "principalType": "ROLE",
-      "principalId": "admin",
-      "permission": "ALLOW"
-    },
-    {
-      "accessType": "EXECUTE",
-      "principalType": "ROLE",
-      "principalId": "admin",
       "permission": "ALLOW",
-      "property": "toggleAdmin"
+      "property": [
+        "toggleEditor",
+        "toggleManager",
+        "toggleWorker",
+        "toggleStatus",
+        "find",
+        "findById",
+        "findOne",
+        "updateAttributes",
+        "updateAll",
+        "upsert"
+      ]
     },
     {
-      "accessType": "EXECUTE",
-      "principalType": "ROLE",
-      "principalId": "editor",
-      "permission": "DENY",
-      "property": "toggleAdmin"
-    },
-    {
-      "accessType": "EXECUTE",
-      "principalType": "ROLE",
-      "principalId": "admin",
-      "permission": "ALLOW",
-      "property": "toggleEditor"
-    },
-    {
-      "accessType": "EXECUTE",
+      "accessType": "WRITE",
       "principalType": "ROLE",
       "principalId": "editor",
       "permission": "ALLOW",
-      "property": "toggleEditor"
-    },
-    {
-      "accessType": "EXECUTE",
-      "principalType": "ROLE",
-      "principalId": "admin",
-      "permission": "ALLOW",
-      "property": "toggleManager"
-    },
-    {
-      "accessType": "EXECUTE",
-      "principalType": "ROLE",
-      "principalId": "editor",
-      "permission": "ALLOW",
-      "property": "toggleManager"
-    },
-    {
-      "accessType": "EXECUTE",
-      "principalType": "ROLE",
-      "principalId": "admin",
-      "permission": "ALLOW",
-      "property": "toggleWorker"
-    },
-    {
-      "accessType": "EXECUTE",
-      "principalType": "ROLE",
-      "principalId": "editor",
-      "permission": "ALLOW",
-      "property": "toggleWorker"
-    },
-    {
-      "accessType": "EXECUTE",
-      "principalType": "ROLE",
-      "principalId": "editor",
-      "permission": "ALLOW",
-      "property": "toggleStatus"
+      "property": "*"
     }
   ],
   "methods": {
@@ -168,7 +148,7 @@
         }
       ],
       "returns": {
-        "arg": "file",
+        "arg": "user",
         "type": "object"
       },
       "http": {
@@ -196,7 +176,7 @@
         }
       ],
       "returns": {
-        "arg": "file",
+        "arg": "user",
         "type": "object"
       },
       "http": {

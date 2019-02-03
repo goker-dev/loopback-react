@@ -3,8 +3,6 @@ import {connect} from 'react-redux';
 import {getProfile} from "../../actions";
 import "./Profile.css";
 
-const FILE_URL = process.env.REACT_APP_FILE_URL;
-
 class Profile extends Component {
     constructor(props) {
         super(props)
@@ -13,24 +11,24 @@ class Profile extends Component {
         }
     }
 
-    getProfileData(props) {
+    getProfile(props) {
         let username = props.match.params.username || this.props.me.username;
         if (username !== this.state.username)
-            getProfile(username)
-                .then(user => {
-                    this.setState({user})
-                })
-                .catch(error => {
-                    this.setState({'error': error})
-                })
+            this.props.getProfile(username);
     }
 
-    componentWillReceiveProps(newProps) {
-        this.getProfileData(newProps)
+    componentWillReceiveProps(props) {
+        if (this.props.match.params.username !== props.match.params.username)
+            this.getProfile(props)
+        if (this.state.user !== props.user) {
+            this.setState({
+                user: props.user
+            })
+        }
     }
 
     componentDidMount() {
-        this.getProfileData(this.props)
+        this.getProfile(this.props)
     }
 
     render() {
@@ -44,18 +42,10 @@ class Profile extends Component {
             <div className="profile">
                 <div className="fb-profile">
                     <img align="left" className="fb-image-lg img-fluid"
-                         onError={(e) => {
-                             e.target.onerror = null;
-                             e.target.src = "http://holder.ninja/1200x360,cover-1200x360.svg"
-                         }}
-                         src={FILE_URL + user.cover.normal}
+                         src={user.cover.normal}
                          alt="{fullName}"/>
                     <img align="left" className="fb-image-profile img-thumbnail"
-                         onError={(e) => {
-                             e.target.onerror = null;
-                             e.target.src = "http://holder.ninja/180x180,profile.svg"
-                         }}
-                         src={FILE_URL + user.image.normal}
+                         src={user.image.normal}
                          alt="{fullName}"/>
                     <div className="fb-profile-text">
                         <h1>{fullName}</h1>
@@ -70,7 +60,15 @@ class Profile extends Component {
 }
 
 const mapStateToProps = (state) => {
-    return {authenticated: state.auth.authenticated, me: state.auth.me}
-}
+    return {me: state.auth.me, user: state.system.data}
+};
 
-export default connect(mapStateToProps)(Profile);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getProfile: (values) => {
+            dispatch(getProfile(values));
+        },
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

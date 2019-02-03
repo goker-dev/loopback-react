@@ -78,8 +78,8 @@ module.exports = function (User) {
                                                         console.log(err);
                                                         cb(err);
                                                     }
-                                                    console.log('USER COVER SAVED', user.cover);
-                                                    cb(null, user.cover);
+                                                    console.log('USER COVER SAVED', user);
+                                                    cb(null, user);
                                                     //return user.image;
                                                 });
 
@@ -145,8 +145,7 @@ module.exports = function (User) {
                                                         console.log(err);
                                                         cb(err);
                                                     }
-                                                    //console.log('USER IMAGE SAVED', user.image);
-                                                    cb(null, user.image);
+                                                    cb(null, user);
                                                     //return user.image;
                                                 });
 
@@ -180,23 +179,21 @@ module.exports = function (User) {
             user.verificationToken = token;
             user.save(function (err) {
                 if (err) {
-                    next(err);
+                    return next(err);
                 }
-                else {
-                    const title = 'Account Verification';
-                    const link = config.url + '/api/users/confirm?uid='
-                        + user.id + '&redirect=/signin&token=' + token;
-                    const html = '<table><tr><td style="padding:15px">Hi <strong>' + user.name + '</strong>;<br><br>' +
-                        'Thanks so much joining ' + config.name + '! To finish your register you just need to confirm that we got your email right.' +
-                        '</td></tr><tr><td style="padding:15px;text-align: center">' +
-                        '<a href="' + link + '" ' +
-                        'style="display:inline-block;margin:0 auto;padding:15px 20px;border-radius:10px;' +
-                        'background:#20a8d8;color: #ffffff;text-decoration:none;">' +
-                        'Confirm your account</a>' +
-                        '</td></tr><tr><td style="padding:15px">Button not working? Try pasting this link into your browser:<br><br>' +
-                        link +
-                        '</td></tr></table>';
-                }
+                const title = 'Account Verification';
+                const link = config.url + '/api/users/confirm?uid='
+                    + user.id + '&redirect=/signin&token=' + token;
+                const html = '<table><tr><td style="padding:15px">Hi <strong>' + user.name + '</strong>;<br><br>' +
+                    'Thanks so much joining ' + config.name + '! To finish your register you just need to confirm that we got your email right.' +
+                    '</td></tr><tr><td style="padding:15px;text-align: center">' +
+                    '<a href="' + link + '" ' +
+                    'style="display:inline-block;margin:0 auto;padding:15px 20px;border-radius:10px;' +
+                    'background:#20a8d8;color: #ffffff;text-decoration:none;">' +
+                    'Confirm your account</a>' +
+                    '</td></tr><tr><td style="padding:15px">Button not working? Try pasting this link into your browser:<br><br>' +
+                    link +
+                    '</td></tr></table>';
 
                 // User.app.models.Email.send({
                 //     to: user.email,

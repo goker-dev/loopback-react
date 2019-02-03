@@ -97,11 +97,11 @@ class EnhancedForm extends Component {
     }
 
     componentWillReceiveProps = (props) => {
-        console.log('componentWillReceiveProps', props);
-        this.setState({
-            user: props.user,
-            loading: false
-        });
+        if (props.user && this.props.user !== props.user)
+            this.setState({
+                user: props.user,
+                loading: false
+            });
     };
 
     async handleSubmit(values, {props, setFieldError, setSubmitting, setStatus}) {
@@ -153,11 +153,6 @@ class EnhancedForm extends Component {
 
 
     render() {
-        // const adminRole = this.state.user.roles.find(x => x.name === 'admin');
-        // const editorRole = this.state.user.roles.find(x => x.name === 'editor');
-        // const managerRole = this.state.user.roles.find(x => x.name === 'manager');
-        // const workerRole = this.state.user.roles.find(x => x.name === 'worker');
-        console.log('render edit', this.state.user.status, this.props.user && this.props.user.status);
         return (
             <div className="row justify-content-md-center">
                 <div className="col-md-6">
@@ -222,8 +217,7 @@ class EnhancedForm extends Component {
 }
 
 const mapStateToProps = (state) => {
-    console.log('mapStateToProps', state.user.data && state.user.data.status);
-    return {me: state.auth.me, user: state.user.data}
+    return {me: state.auth.me, user: state.system.data}
 };
 
 const mapDispatchToProps = (dispatch) => {
@@ -244,7 +238,6 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(toggleWorker(values));
         },
         toggleStatus: (values) => {
-            console.log('dispatch toggleStatus');
             dispatch(toggleStatus(values));
         },
     }

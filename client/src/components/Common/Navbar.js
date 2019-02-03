@@ -1,16 +1,15 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
+import SystemMessages from './SystemMessages';
 import logo from '../../styles/img/logo.svg';
-
-const FILE_URL = process.env.REACT_APP_FILE_URL;
 
 class Navbar extends PureComponent {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             me: props.me,
-            shrink: props.me ? true : false
+            shrink: !!props.me
         };
     }
 
@@ -21,7 +20,6 @@ class Navbar extends PureComponent {
     }
 
     static Shrink(e, shrink) {
-        console.log('shrink', shrink)
         const navbar = document.getElementById('navbar');
         if (shrink || window.pageYOffset > 1) {
             navbar.classList.add("navbar-shrink");
@@ -37,11 +35,10 @@ class Navbar extends PureComponent {
     }
 
     componentWillReceiveProps(props) {
-        console.log('navbar new props', props);
         this.setState({
             me: props.me,
-            shrink: props.me ? true : false
-        })
+            shrink: !!props.me
+        });
         Navbar.Shrink(null, props.me);
         if (props.me)
             window.removeEventListener('scroll', Navbar.Shrink);
@@ -80,22 +77,18 @@ class Navbar extends PureComponent {
     }
 
     renderUserMenu() {
-        if (this.state.me) {
+        if (this.state.me && this.state.me.image) {
             return [
                 <li className="nav-item dropdown" key="userMenu" onClick={Navbar.dropDownToggle}>
           <span className="nav-link dropdown-toggle" data-toggle="dropdown">
               <img className="navbar-avatar"
-                   onError={(e) => {
-                       e.target.onerror = null;
-                       e.target.src = "http://holder.ninja/50x50,P.svg"
-                   }}
-                   src={FILE_URL + this.state.me.image.thumb} alt={this.state.me.name}/>
-            <i className={this.state.me.icon}></i> <strong>{this.state.me.name}</strong>
+                   src={this.state.me.image.thumb} alt={this.state.me.name}/>
+            <i className={this.state.me.icon}/> <strong>{this.state.me.name}</strong>
           </span>
                     <div className="dropdown-menu">
                         <Link className="dropdown-item" to="/profile">Profile</Link>
                         <Link className="dropdown-item" to="/settings">Settings</Link>
-                        <div className="dropdown-divider"></div>
+                        <div className="dropdown-divider"/>
                         <Link className="dropdown-item" to="/signout">Log out</Link>
                     </div>
                 </li>
@@ -119,7 +112,7 @@ class Navbar extends PureComponent {
                     {this.renderLogo()}
                     <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMain"
                             aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
-                        <span className="navbar-toggler-icon"></span>
+                        <span className="navbar-toggler-icon"/>
                     </button>
 
                     <div className="collapse navbar-collapse" id="navbarMain">
@@ -135,13 +128,13 @@ class Navbar extends PureComponent {
                         </ul>
                     </div>
                 </div>
+                <SystemMessages/>
             </nav>
         );
     }
 }
 
 const mapStateToProps = (state) => {
-    console.log('mapStateToProps', state.auth);
     return {me: state.auth.me}
 }
 

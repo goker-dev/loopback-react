@@ -3,32 +3,40 @@ import History from '../history.js';
 import * as type from './types';
 
 const API_URL = process.env.REACT_APP_API_URL;
-console.log('API_URL', process.env.REACT_APP_API_URL);
+const FILE_URL = process.env.REACT_APP_FILE_URL;
 let TOKEN = localStorage.getItem('token');
 let UID = localStorage.getItem('uid');
 
-export const signUp = (...data) => {
-    return async () => {
-        await axios.post(`${API_URL}/users`, ...data)
+
+export const signUp = (data) => {
+    return (dispatch) => {
+        axios.post(`${API_URL}/users`, data)
             .then(() => {
-                History.push('/signin');
+                dispatch({
+                    type: type.SUCCESS,
+                    payload: {name: 'SUCCESS', message: 'Check your email for confirmation link.'}
+                });
+                setTimeout(() => {
+                    History.push('/signin')
+                }, 1500);
             })
-            .catch(error => {
-                throw error && error.response && error.response.data.error.message;
-            });
+            .catch(error => dispatch({
+                type: type.ERROR,
+                payload: error.response
+            }));
     };
 };
 
 export const setSession = (response) => {
-    response.isAdmin = response.roles.find(x => x.name === 'admin');
-    response.isEditor = response.roles.find(x => x.name === 'editor');
-    sessionStorage.setItem('me', JSON.stringify(response))
+    //response.isAdmin = response.roles.find(x => x.name === 'admin');
+    //response.isEditor = response.roles.find(x => x.name === 'editor');
+    sessionStorage.setItem('me', JSON.stringify(response));
     return response;
 };
 
-export const signIn = (...data) => {
+export const signIn = (data) => {
     return async (dispatch) => {
-        await axios.post(`${API_URL}/users/login`, ...data)
+        await axios.post(`${API_URL}/users/login`, data)
             .then(response => {
                 localStorage.setItem('token', response.data.id);
                 localStorage.setItem('uid', response.data.userId);
@@ -40,13 +48,15 @@ export const signIn = (...data) => {
                         dispatch({type: type.AUTH_USER, payload: setSession(response)});
                         History.push('/home');
                     })
-                    .catch(error => {
-                        throw error.response.data.error.message;
-                    })
+                    .catch(error => dispatch({
+                        type: type.ERROR,
+                        payload: error.response
+                    }));
             })
-            .catch(error => {
-                throw error.response.data.error.message;
-            });
+            .catch(error => dispatch({
+                type: type.ERROR,
+                payload: error.response
+            }));
     };
 };
 
@@ -59,26 +69,28 @@ export const signOut = () => {
 };
 
 export const resetPasswordRequest = (email) => {
-    return async () => {
-        await axios.post(`${API_URL}/users/reset`, {email})
+    return (dispatch) => {
+        axios.post(`${API_URL}/users/reset`, {email})
             .then(() => {
             })
-            .catch(error => {
-                throw error && error.response && error.response.data.error.message;
-            });
+            .catch(error => dispatch({
+                type: type.ERROR,
+                payload: error.response
+            }));
     };
 };
 
 export const resetPassword = ({token, password}) => {
-    return async () => {
-        await axios.post(`${API_URL}/users/reset-password`, {newPassword: password}, {
+    return (dispatch) => {
+        axios.post(`${API_URL}/users/reset-password`, {newPassword: password}, {
             headers: {authorization: token}
         })
             .then(() => {
             })
-            .catch(error => {
-                throw error && error.response && error.response.data.error.message;
-            });
+            .catch(error => dispatch({
+                type: type.ERROR,
+                payload: error.response
+            }));
     };
 };
 
@@ -90,8 +102,28 @@ function computeUser(user) {
     user.icon = user.isAdmin ? 'fas fa-user-astronaut'
         : user.isEditor ? 'fa fa-user-secret'
             : user.isManager || user.isWorker ? 'fa fa-user-tie' : 'fa fa-user';
-    user.image = user.image || {thumbnail: null, normal: null, original: null};
-    user.cover = user.cover || {thumbnail: null, normal: null, original: null};
+    if (typeof user.image === 'object') {
+        user.image.thumb = FILE_URL + user.image.normal;
+        user.image.normal = FILE_URL + user.image.normal;
+        user.image.url = FILE_URL + user.image.url;
+    } else {
+        user.image = {
+            thumb: 'http://holder.ninja/50x50,P.svg',
+            normal: 'http://holder.ninja/250x250,PROFILE.svg',
+            url: 'http://holder.ninja/500x500,PROFILE.svg'
+        };
+    }
+    if (typeof user.cover === 'object') {
+        user.cover.thumb = FILE_URL + user.cover.normal;
+        user.cover.normal = FILE_URL + user.cover.normal;
+        user.cover.url = FILE_URL + user.cover.url;
+    } else {
+        user.cover = {
+            thumb: 'http://holder.ninja/400x120,COVER-1200x360.svg',
+            normal: 'http://holder.ninja/1200x360,COVER-1200x360.svg',
+            url: 'http://holder.ninja/1200x360,COVER-1200x360.svg'
+        };
+    }
     return user;
 }
 
@@ -110,43 +142,51 @@ export const getUser = (uid) => {
 };
 
 export const fetchUser = (id) => {
-    console.log('fetchUser', id);
-    return async (dispatch) => {
+    return (dispatch) => {
         axios.get(`${API_URL}/users/${id}`, {
             headers: {authorization: localStorage.getItem('token')}
         })
             .then(response => {
-                console.log('fetchUser dispatch', response.data);
-                dispatch({type: type.GET_USER_SUCCESS, payload: computeUser(response.data)});
+                dispatch({type: type.DATA, payload: computeUser(response.data)});
             })
-            .catch(error => {
-                dispatch({
-                    type: type.GET_USER_ERROR,
-                    payload: error.response && error.response.data && error.response.data.error.message
-                });
-            });
+            .catch(error => dispatch({
+                type: type.ERROR,
+                payload: error.response
+            }));
     }
 };
 
 export const getProfile = (username) => {
-    return new Promise((resolve, reject) => {
+    return (dispatch) => {
         axios.get(`${API_URL}/users/profile/${username}`, {
             headers: {authorization: localStorage.getItem('token')}
         })
             .then(response => {
-                resolve(computeUser(response.data.user))
+                dispatch({type: type.DATA, payload: computeUser(response.data.user)});
             })
-            .catch(error => {
-                reject(error.response.data.error)
-            });
-    });
+            .catch(error => dispatch({
+                type: type.ERROR,
+                payload: error.response
+            }));
+    }
+
+    // return new Promise((resolve, reject) => {
+    //     axios.get(`${API_URL}/users/profile/${username}`, {
+    //         headers: {authorization: localStorage.getItem('token')}
+    //     })
+    //         .then(response => {
+    //             resolve(computeUser(response.data.user))
+    //         })
+    //         .catch(error => {
+    //             reject(error.response.data.error)
+    //         });
+    // });
 };
 
 export const getSession = (callback) => {
     const token = localStorage.getItem('token');
     const me = sessionStorage.getItem('me');
     if (token) {
-        console.log(token);
         if (me) {
             callback(JSON.parse(me));
         } else {
@@ -165,59 +205,66 @@ export const getSession = (callback) => {
     } else callback(null)
 };
 
-export const addUser = (...data) => {
-    return async () => {
-        await axios.post(`${API_URL}/users`, ...data)
+export const addUser = (data) => {
+    return (dispatch) => {
+        axios.post(`${API_URL}/users`, data)
             .then(() => {
                 History.push('/users');
             })
-            .catch(error => {
-                throw error && error.response && error.response.data.error.message;
-            });
+            .catch(error => dispatch({
+                type: type.ERROR,
+                payload: error.response
+            }));
     };
 };
 
-export const settingsAccount = (...data) => {
-    return async (dispatch) => {
-        await axios.patch(`${API_URL}/users/${UID}`, ...data,
+export const settingsAccount = (data) => {
+    return (dispatch) => {
+        axios.patch(`${API_URL}/users/${UID}`, data,
             {headers: {authorization: TOKEN}})
             .then(response => {
-                dispatch({type: type.AUTH_USER, payload: setSession(response.data)});
+                dispatch({type: type.AUTH_USER, payload: setSession(computeUser(response.data))});
+                dispatch({
+                    type: type.SUCCESS,
+                    payload: {name: 'SUCCESS', message: 'Your account has been updated successfully!'}
+                });
             })
-            .catch(error => {
-                throw error.response.data.error.message;
-            });
+            .catch(error => dispatch({
+                type: type.ERROR,
+                payload: error.response
+            }));
     };
 };
 
 export const settingsChangePassword = ({oldPassword, newPassword}) => {
-    return async (dispatch) => {
-        await axios.post(`${API_URL}/users/change-password`, {oldPassword, newPassword},
+    return (dispatch) => {
+        axios.post(`${API_URL}/users/change-password`, {oldPassword, newPassword},
             {headers: {authorization: localStorage.getItem('token')}})
-            .then(response => {
-                return response.data;
+            .then(() => {
+                dispatch({
+                    type: type.SUCCESS,
+                    payload: {name: 'SUCCESS', message: 'Your password has been changed successfully!'}
+                });
             })
-            .catch(error => {
-                throw error.response.data.error.message;
-            });
-    };
+            .catch(error => dispatch({
+                type: type.ERROR,
+                payload: error.response
+            }));
+    }
 };
 
 export const getUsers = () => {
-    return async (dispatch) => {
-        await axios.get(`${API_URL}/users/`, {
+    return (dispatch) => {
+        axios.get(`${API_URL}/users/`, {
             headers: {authorization: localStorage.getItem('token')}
         })
             .then(response => {
-                dispatch({type: type.GET_USERS_SUCCESS, payload: response.data.map(user => computeUser(user))});
+                dispatch({type: type.DATA, payload: response.data.map(user => computeUser(user))});
             })
-            .catch(error => {
-                console.log('ERROR --', error);
-                dispatch({
-                    type: type.GET_USERS_ERROR,
-                    payload: error.response && error.response.data && error.response.data.error.message
-                });
-            });
+            .catch(error => dispatch({
+                type: type.ERROR,
+                payload: error.response
+            }));
     }
 };
 
@@ -237,14 +284,12 @@ export const toggleAdmin = (id, toggleType = 'Admin') => {
         axios.post(`${API_URL}/users/${id}/toggle${toggleType}`, {id},
             {headers: {authorization: TOKEN}})
             .then(response => {
-                console.log('toggleType', toggleType, response.data.data.status, computeUser(response.data.data));
-                dispatch({type: type.GET_USER_SUCCESS, payload: computeUser(response.data.data)});
+                dispatch({type: type.DATA, payload: computeUser(response.data.data)});
             })
             .catch(error => {
-                console.log('toggleType error ', toggleType, error);
                 dispatch({
-                    type: type.GET_USER_ERROR,
-                    payload: error.response && error.response.data && error.response.data.error.message
+                    type: type.ERROR,
+                    payload: error.response
                 });
             });
     }
@@ -263,7 +308,6 @@ export const toggleWorker = (id) => {
 };
 
 export const toggleStatus = (id) => {
-    console.log('action toggleStatus');
     return toggleAdmin(id, 'Status')
 };
 
@@ -281,10 +325,10 @@ export const uploadCoverImage = (file) => {
                 dispatch({type: type.AUTH_USER, payload: setSession(me)});
                 //return me;
             })
-            .catch(error => {
-                console.log('uploadCoverImage ERROR', error);
-                //throw error.response.data.error.message;
-            })
+            .catch(error => dispatch({
+                type: type.ERROR,
+                payload: error.response
+            }));
     };
 };
 
@@ -297,17 +341,12 @@ export const uploadProfileImage = (file) => {
             }
         })
             .then(response => {
-                console.log('uploadProfileImage', response);
-                const me = JSON.parse(sessionStorage.getItem('me'));
-                me.image = response.data.file || me.image;
-                console.log('uploadProfileImage', me);
-                dispatch({type: type.AUTH_USER, payload: setSession(me)});
-                //return me;
+                dispatch({type: type.AUTH_USER, payload: setSession(computeUser(response.data.user))});
             })
-            .catch(error => {
-                console.log('uploadProfileImage ERROR', error);
-                //throw error.response.data.error.message;
-            })
+            .catch(error => dispatch({
+                type: type.ERROR,
+                payload: error.response
+            }));
     };
 };
 

@@ -1,7 +1,6 @@
 import React from 'react';
 import {Link, Route} from 'react-router-dom';
 import List from "./List";
-import Add from "./Add";
 import Edit from "./Edit";
 
 const routes = [
@@ -13,15 +12,6 @@ const routes = [
         title: () => 'User List',
         name: 'List',
         main: List
-    },
-    {
-        path: '/users/add',
-        link: '/users/add',
-        icon: 'fa fa-plus',
-        exact: true,
-        title: () => 'Add New User',
-        name: 'Add',
-        main: Add
     },
     {
         path: '/users/edit/:id?',

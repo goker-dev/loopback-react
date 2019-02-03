@@ -63,7 +63,8 @@ const FormikForm = ({
                             {isSubmitting && <span><i className="fa fa-circle-notch fa-spin"></i>&nbsp;</span>}
                             Create my account
                         </button>
-                        <p className="pt-4 text-center small">You can <Link to="/signin">sign in</Link> if you have an account
+                        <p className="pt-4 text-center small">You can <Link to="/signin">sign in</Link> if you have an
+                            account
                             already.</p>
                     </Form>
                 </div>
@@ -97,22 +98,26 @@ const EnhancedForm = withFormik({
         setStatus(null);
         try {
             await props.signUp(values);
-            setStatus({'success': 'Your account has been created successfully!'})
+            //setStatus({'success': 'Your account has been created successfully!'})
             setSubmitting(false);
             //resetForm();
         } catch (errors) {
-            setStatus({'error': errors})
-            setSubmitting(false);
+            //setStatus({'error': errors})
+            //setSubmitting(false);
         }
     }
-})(FormikForm)
+})(FormikForm);
+
+const mapStateToProps = (state) => {
+    return {me: state.auth.me}
+};
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        signUp: async (values) => {
-            await dispatch(signUp(values));
+        signUp: (values) => {
+            dispatch(signUp(values));
         },
     }
-}
+};
 
-export default connect(null, mapDispatchToProps)(EnhancedForm);
+export default connect(mapStateToProps, mapDispatchToProps)(EnhancedForm);
