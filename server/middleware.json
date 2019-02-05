@@ -41,9 +41,16 @@
     }
   },
   "files": {
-    "loopback#static": {
-      "params": "$!../client/build"
-    }
+    "loopback#static": [
+      {
+        "paths": ["/"],
+        "params": "$!../client/build"
+      },
+      {
+        "paths": ["*"],
+        "params": "$!../client/build"
+      }
+    ]
   },
   "final": {
     "loopback#urlNotFound": {}
