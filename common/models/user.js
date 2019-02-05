@@ -42,27 +42,28 @@ module.exports = function (User) {
                     if (err) {
                         cb(err);
                     } else {
+                        console.log('CONTAINER CHECK', container);
                         Container.upload(context.req, context.res, {container: container}, function (err, file) {
                             if (err) {
                                 cb(err);
                             } else {
-                                var file = file.files.file[0];
-                                //console.log('FILE UPLOADED', file);
+                                let file = file.files.file[0];
+                                console.log('FILE UPLOADING', file);
                                 //console.log('USER IMAGE', user);
 
                                 const normal = file.name.replace(/\./, '_normal.');
-                                sharp('data/' + file.container + '/' + file.name)
+                                sharp(root + file.container + '/' + file.name)
                                     .resize(1200, 360, {fit: 'cover'})
                                     .on('error', function (err) {
                                         console.log(err);
                                     })
                                     .jpeg()
-                                    .toFile('data/' + file.container + '/' + normal)
+                                    .toFile(root + file.container + '/' + normal)
                                     .then(function () {
                                         const thumb = file.name.replace(/\./, '_thumb.');
-                                        sharp('data/' + file.container + '/' + file.name)
+                                        sharp(root + file.container + '/' + file.name)
                                             .resize(400, 120)
-                                            .toFile('data/' + file.container + '/' + thumb)
+                                            .toFile(root + file.container + '/' + thumb)
                                             .then(function () {
                                                 user.updateAttributes({
                                                     'cover': {
@@ -85,8 +86,6 @@ module.exports = function (User) {
 
                                             });
                                     });
-
-
                             }
                         });
                     }
@@ -97,6 +96,7 @@ module.exports = function (User) {
     User.image = function (id, context, options, cb) {
         const Container = User.app.models.Container;
         const token = options && options.accessToken;
+        const root =  User.app.dataSources.storage.settings.root;
         //console.log(cb);
         //cb = function(){return console.log()};
         User.findById(token && token.userId, function (err, user) {
@@ -112,24 +112,26 @@ module.exports = function (User) {
                             if (err) {
                                 cb(err);
                             } else {
-                                var file = file.files.file[0];
-                                console.log('FILE UPLOADED', file);
-                                console.log('USER IMAGE', user);
+                                file = file.files.file[0];
+                                //console.log('FILE UPLOADED', file);
+
+                                console.log('FILE UPLOADED',root + file.container + '/' + file.name);
 
                                 const normal = file.name.replace(/\./, '_normal.');
-                                sharp('data/' + file.container + '/' + file.name)
+
+                                sharp(root + file.container + '/' + file.name)
                                     .resize(360, 360, {fit: 'cover'})
                                     //.crop(sharp.strategy.attention)
                                     .on('error', function (err) {
                                         console.log(err);
                                     })
                                     .jpeg()
-                                    .toFile('data/' + file.container + '/' + normal)
+                                    .toFile(root + file.container + '/' + normal)
                                     .then(function () {
                                         const thumb = file.name.replace(/\./, '_thumb.');
-                                        sharp('data/' + file.container + '/' + file.name)
+                                        sharp(root + file.container + '/' + file.name)
                                             .resize(50, 50)
-                                            .toFile('data/' + file.container + '/' + thumb)
+                                            .toFile(root + file.container + '/' + thumb)
                                             .then(function () {
                                                 user.updateAttributes({
                                                     'image': {
@@ -145,6 +147,7 @@ module.exports = function (User) {
                                                         console.log(err);
                                                         cb(err);
                                                     }
+                                                    console.log('USER IMAGE SAVED', user);
                                                     cb(null, user);
                                                     //return user.image;
                                                 });
