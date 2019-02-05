@@ -54,9 +54,5 @@
   "container": {
     "dataSource": "storage",
     "public": true
-  },
-  "salesSlip": {
-    "dataSource": "mongo",
-    "public": true
   }
 }
