@@ -33,6 +33,7 @@ module.exports = function (User) {
     User.cover = function (id, context, options, cb) {
         const Container = User.app.models.Container;
         const token = options && options.accessToken;
+        const root = User.app.dataSources.storage.settings.root;
         User.findById(token && token.userId, function (err, user) {
             if (err) {
                 cb(err);
@@ -47,7 +48,7 @@ module.exports = function (User) {
                             if (err) {
                                 cb(err);
                             } else {
-                                let file = file.files.file[0];
+                                file = file.files.file[0];
                                 console.log('FILE UPLOADING', file);
                                 //console.log('USER IMAGE', user);
 
@@ -84,7 +85,14 @@ module.exports = function (User) {
                                                     //return user.image;
                                                 });
 
+                                            })
+                                            .catch(err => {
+                                                throw err
                                             });
+
+                                    })
+                                    .catch(err => {
+                                        throw err
                                     });
                             }
                         });
@@ -96,7 +104,7 @@ module.exports = function (User) {
     User.image = function (id, context, options, cb) {
         const Container = User.app.models.Container;
         const token = options && options.accessToken;
-        const root =  User.app.dataSources.storage.settings.root;
+        const root = User.app.dataSources.storage.settings.root;
         //console.log(cb);
         //cb = function(){return console.log()};
         User.findById(token && token.userId, function (err, user) {
@@ -115,7 +123,7 @@ module.exports = function (User) {
                                 file = file.files.file[0];
                                 //console.log('FILE UPLOADED', file);
 
-                                console.log('FILE UPLOADED',root + file.container + '/' + file.name);
+                                console.log('FILE UPLOADED', root + file.container + '/' + file.name);
 
                                 const normal = file.name.replace(/\./, '_normal.');
 
@@ -150,9 +158,16 @@ module.exports = function (User) {
                                                     console.log('USER IMAGE SAVED', user);
                                                     cb(null, user);
                                                     //return user.image;
-                                                });
+                                                })
 
+                                            })
+                                            .catch(err => {
+                                                throw err
                                             });
+
+                                    })
+                                    .catch(err => {
+                                        throw err
                                     });
 
 

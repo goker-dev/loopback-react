@@ -320,10 +320,7 @@ export const uploadCoverImage = (file) => {
             }
         })
             .then(response => {
-                const me = JSON.parse(sessionStorage.getItem('me'));
-                me.cover = response.data.file || me.cover;
-                dispatch({type: type.AUTH_USER, payload: setSession(me)});
-                //return me;
+                dispatch({type: type.AUTH_USER, payload: setSession(computeUser(response.data.user))});
             })
             .catch(error => dispatch({
                 type: type.ERROR,
