@@ -61,7 +61,9 @@ const EnhancedForm = withFormik({
             setSubmitting();
             if (success) {
                 resetForm();
-                History.push('/login');
+                setTimeout(() => {
+                    History.push('/login')
+                }, 1000);
             }
         };
         props.resetPassword(values);

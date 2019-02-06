@@ -95,6 +95,10 @@ export const resetPassword = ({token, password}) => {
             headers: {authorization: token}
         })
             .then(() => {
+                dispatch({
+                    type: type.SUCCESS,
+                    payload: {name: 'SUCCESS', message: 'You has been changed your password successfully.'}
+                })
             })
             .catch(error => dispatch({
                 type: type.ERROR,
