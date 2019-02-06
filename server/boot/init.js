@@ -1,47 +1,47 @@
 'use strict';
 
-module.exports = function (app) {
-  if (!app.get('initialData')) return;
+module.exports = (app) => {
+    if (!app.get('initialData')) return;
 
-  var User = app.models.user;
-  var Role = app.models.Role;
-  var RoleMapping = app.models.RoleMapping;
-  // create a user
-  User.findOrCreate({where: {email: 'admin@goker.me'}},
-    {
-      name: 'Admin',
-      surname: '-',
-      username: 'admin',
-      email: 'admin@goker.me',
-      password: 'admin',
-      emailVerified: true
-    }
-    , function (err, user) {
-      if (err) console.log('ERROR', err);
-      console.log('Created user:', user);
+    const User = app.models.user;
+    const Role = app.models.Role;
+    const RoleMapping = app.models.RoleMapping;
+    // create a user
+    User.findOrCreate({where: {email: 'admin@goker.me'}},
+        {
+            name: 'Admin',
+            surname: '-',
+            username: 'admin',
+            email: 'admin@goker.me',
+            password: 'admin',
+            emailVerified: true
+        }
+        , function (err, user) {
+            if (err) console.log('ERROR', err);
+            console.log('Created user:', user);
 
-      //create the admin role
-      Role.findOrCreate({where: {name: 'admin'}}, {
-        name: 'admin'
-      }, function (err, role) {
-        if (err) console.log('ERROR', err);
+            //create the admin role
+            Role.findOrCreate({where: {name: 'admin'}}, {
+                name: 'admin'
+            }, function (err, role) {
+                if (err) console.log('ERROR', err);
 
-        // make an admin user
-        RoleMapping.findOrCreate({
-          where: {
-            principalId: user.id,
-            roleId: role.id
-          }
-        }, {
-          principalType: RoleMapping.USER,
-          principalId: user.id,
-          roleId: role.id
-        }, function (err, principal) {
-          if (err) console.log('ERROR', err);
-          console.log('Created principal:', principal);
+                // make an admin user
+                RoleMapping.findOrCreate({
+                    where: {
+                        principalId: user.id,
+                        roleId: role.id
+                    }
+                }, {
+                    principalType: RoleMapping.USER,
+                    principalId: user.id,
+                    roleId: role.id
+                }, function (err, principal) {
+                    if (err) console.log('ERROR', err);
+                    console.log('Created principal:', principal);
+                });
+            });
         });
-      });
-    });
 
     User.findOrCreate({where: {email: 'editor@goker.me'}},
         {
@@ -153,17 +153,17 @@ module.exports = function (app) {
 
 
     User.findOrCreate({where: {email: 'user@goker.me'}},
-    {
-      name: 'User',
-      surname: '-',
-      username: 'user',
-      email: 'user@goker.me',
-      password: 'user',
-      emailVerified: true
-    }
-    , function (err, user) {
-      if (err) console.log('ERROR', err);
-      console.log('Created user:', user);
-    });
+        {
+            name: 'User',
+            surname: '-',
+            username: 'user',
+            email: 'user@goker.me',
+            password: 'user',
+            emailVerified: true
+        }
+        , function (err, user) {
+            if (err) console.log('ERROR', err);
+            console.log('Created user:', user);
+        });
 
 };
