@@ -102,12 +102,10 @@ module.exports = function (User) {
     // });
     //send password reset link when requested
     User.on('resetPasswordRequest', function (user) {
-        const url = config.url + '/#!password';
-        const html = 'Click the link to reset your password <br><a href="' + url + '/' +
-            user.accessToken.id + '">' + url + '/' +
-            user.accessToken.id + '</a>';
+        const url = config.url + '/newpassword';
+        const html = `Click the link to reset your password <br><a href="${url}/${user.accessToken.id}">
+            ${url}/${user.accessToken.id}</a>`;
         console.log('html', html);
-
         transport.sendMail({
             from: from,
             to: user.email,

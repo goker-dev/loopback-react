@@ -3,12 +3,14 @@ import {Field, Form, withFormik} from 'formik'
 import * as Yup from 'yup'
 import {resetPassword} from '../../../actions'
 import {connect} from 'react-redux'
+import History from '../../../history'
+
+let setSubmittingHigher;
 
 const FormikForm = ({
                         values,
                         touched,
                         errors,
-                        status,
                         isSubmitting
                     }) => (
     <section className="cover  bg-light">
@@ -29,12 +31,6 @@ const FormikForm = ({
                             {touched.password && errors.password &&
                             <small className="form-text text-danger">{errors.password}</small>}
                         </fieldset>
-                        {status && status.error && <div className="alert alert-danger">
-                            <small>{status.error}</small>
-                        </div>}
-                        {status && status.success && <div className="alert alert-success">
-                            <small>{status.success}</small>
-                        </div>}
                         <button className="btn btn-primary w-100" type="submit" disabled={isSubmitting}>
                             {isSubmitting && <span><i className="fa fa-circle-notch fa-spin"/>&nbsp;</span>}
                             Set my new password
@@ -54,28 +50,35 @@ const EnhancedForm = withFormik({
         }
     },
     validationSchema: Yup.object().shape({
-        //email: Yup.string().email('Please write a correct email address').required('Email is required'),
+        token: Yup.string().required('Token is required'),
+        password: Yup.string().required('Password is required').min(8, 'Password must be 8 characters or longer')
+            .matches(/[a-z]/, 'Password must contain at least one lowercase char')
+            .matches(/[A-Z]/, 'Password must contain at least one uppercase char')
+            .matches(/[a-zA-Z]+[^a-zA-Z\s]+/, 'at least 1 number or special char (@,!,#, etc).'),
     }),
-    async handleSubmit(values, {props, resetForm, setFieldError, setSubmitting, setStatus}) {
-        setStatus(null);
-        try {
-            await props.resetPassword(values);
-            setSubmitting(false);
-            setStatus({'success': 'Done.'});
-        } catch (errors) {
-            setStatus({'error': errors});
-            setSubmitting(false);
-        }
+    handleSubmit(values, {props, resetForm, setSubmitting}) {
+        setSubmittingHigher = (success) => {
+            setSubmitting();
+            if (success) {
+                resetForm();
+                History.push('/login');
+            }
+        };
+        props.resetPassword(values);
     }
 })(FormikForm);
 
+const mapStateToProps = (state) => {
+    typeof setSubmittingHigher === 'function' && setSubmittingHigher(!!state.system.message);
+    return {system: state.system}
+};
+
 const mapDispatchToProps = (dispatch) => {
     return {
-        resetPassword: async (values) => {
-            await dispatch(resetPassword(values));
+        resetPassword: (values) => {
+            dispatch(resetPassword(values));
         },
     }
 };
 
-
-export default connect(null, mapDispatchToProps)(EnhancedForm);
+export default connect(mapStateToProps, mapDispatchToProps)(EnhancedForm);
