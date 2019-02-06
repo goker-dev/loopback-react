@@ -5,11 +5,12 @@ import * as Yup from 'yup'
 import {resetPasswordRequest} from '../../../actions'
 import {connect} from 'react-redux'
 
+let setSubmittingHigher;
+
 const FormikForm = ({
                         values,
                         touched,
                         errors,
-                        status,
                         isSubmitting
                     }) => (
     <section className="cover  bg-light">
@@ -24,12 +25,6 @@ const FormikForm = ({
                             {touched.email && errors.email &&
                             <small className="form-text text-danger">{errors.email}</small>}
                         </fieldset>
-                        {status && status.error && <div className="alert alert-danger">
-                            <small>{status.error}</small>
-                        </div>}
-                        {status && status.success && <div className="alert alert-success">
-                            <small>{status.success}</small>
-                        </div>}
                         <button className="btn btn-primary w-100" type="submit" disabled={isSubmitting}>
                             {isSubmitting && <span><i className="fa fa-circle-notch fa-spin"/>&nbsp;</span>}
                             Send a reset email
@@ -51,26 +46,26 @@ const EnhancedForm = withFormik({
     validationSchema: Yup.object().shape({
         email: Yup.string().email('Please write a correct email address').required('Email is required'),
     }),
-    async handleSubmit(values, {props, resetForm, setFieldError, setSubmitting, setStatus}) {
-        setStatus(null);
-        try {
-            await props.resetPasswordRequest(values.email);
-            setSubmitting(false);
-            setStatus({'success': 'We sent an email to you. Please check your email.'});
-        } catch (errors) {
-            setStatus({'error': errors});
-            setSubmitting(false);
-        }
+    handleSubmit(values, {props, setSubmitting, resetForm}) {
+        setSubmittingHigher = () => {
+            setSubmitting();
+            resetForm();
+        };
+        props.resetPasswordRequest(values.email)
     }
 })(FormikForm);
 
+const mapStateToProps = (state) => {
+    typeof setSubmittingHigher === 'function' && setSubmittingHigher(false);
+    return {system: state.system}
+};
+
 const mapDispatchToProps = (dispatch) => {
     return {
-        resetPasswordRequest: async (values) => {
-            await dispatch(resetPasswordRequest(values));
+        resetPasswordRequest: (values) => {
+            dispatch(resetPasswordRequest(values));
         },
     }
 };
 
-
-export default connect(null, mapDispatchToProps)(EnhancedForm);
+export default connect(mapStateToProps, mapDispatchToProps)(EnhancedForm);

@@ -5,8 +5,9 @@ import "./Profile.css";
 
 class Profile extends Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
+            isLoading: true,
             user: null
         }
     }
@@ -18,10 +19,15 @@ class Profile extends Component {
     }
 
     componentWillReceiveProps(props) {
-        if (this.props.match.params.username !== props.match.params.username)
-            this.getProfile(props)
+        if (this.props.match.params.username !== props.match.params.username) {
+            this.setState({
+                isLoading: true
+            });
+            this.getProfile(props);
+        }
         if (this.state.user !== props.user) {
             this.setState({
+                isLoading: false,
                 user: props.user
             })
         }
@@ -33,8 +39,11 @@ class Profile extends Component {
 
     render() {
         const user = this.state.user;
+        if (this.state.isLoading) return <section className="container">
+            <div className="profile">Loading...</div>
+        </section>;
         if (!user) return <section className="container">
-            <div className="profile">User not found!
+            <div className="profile"><h3>User not found!</h3>
                 <p>{JSON.stringify(process.env)}</p></div>
         </section>;
         const fullName = user.name + ' ' + user.surname;

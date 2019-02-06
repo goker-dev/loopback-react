@@ -61,17 +61,26 @@ export const signIn = (data) => {
 };
 
 export const signOut = () => {
-    localStorage.removeItem('token');
-    sessionStorage.removeItem('me');
-    TOKEN = null;
-    History.push('/');
-    return {type: type.UNAUTH_USER, me: false};
+    return (dispatch) => {
+        localStorage.removeItem('token');
+        sessionStorage.removeItem('me');
+        TOKEN = null;
+        dispatch({
+            type: type.UNAUTH_USER,
+            payload: null
+        });
+        History.push('/');
+    }
 };
 
 export const resetPasswordRequest = (email) => {
     return (dispatch) => {
         axios.post(`${API_URL}/users/reset`, {email})
             .then(() => {
+                dispatch({
+                    type: type.SUCCESS,
+                    payload: {name: 'SUCCESS', message: 'We sent an email to you. Please check your email.'}
+                })
             })
             .catch(error => dispatch({
                 type: type.ERROR,
