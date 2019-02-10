@@ -3,7 +3,6 @@ import {Field, Form, withFormik} from 'formik'
 import * as Yup from 'yup'
 import {resetPassword} from '../../../actions'
 import {connect} from 'react-redux'
-import History from '../../../history'
 
 let setSubmittingHigher;
 
@@ -61,9 +60,6 @@ const EnhancedForm = withFormik({
             setSubmitting();
             if (success) {
                 resetForm();
-                setTimeout(() => {
-                    History.push('/login')
-                }, 1000);
             }
         };
         props.resetPassword(values);
