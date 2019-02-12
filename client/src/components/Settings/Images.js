@@ -8,7 +8,9 @@ class Images extends Component {
         this.state = {
             me: props.me,
             selectedFile: '',
-            isUploading: false
+            isUploading: false,
+            isUploadingCover: false,
+            isUploadingProfile: false
         };
         // this.handleSubmit = this.handleSubmit.bind(this);
         this.handleFileChange = this.handleFileChange.bind(this);
@@ -17,7 +19,10 @@ class Images extends Component {
     componentWillReceiveProps(props) {
         if (this.props.me !== props.me)
             this.setState({
-                me: props.me
+                me: props.me,
+                isDone: true,
+                isUploadingCover: false,
+                isUploadingProfile: false,
             })
     }
 
@@ -34,21 +39,10 @@ class Images extends Component {
         this.setState({status: '', isUploadingCover: id === 'cover', isUploadingProfile: id === 'profile'});
         const formData = new FormData();
         formData.append('file', file, file.name);
-
         if (id === 'cover')
-            try {
-                await this.props.uploadCoverImage(formData)
-                this.setState({isDone: true, isUploadingCover: false});
-            } catch (error) {
-                this.setState({status: error, isDone: false, isUploadingCover: false})
-            }
+            this.props.uploadCoverImage(formData);
         else
-            try {
-                await this.props.uploadProfileImage(formData)
-                this.setState({isDone: true, isSubmitting: false, isUploadingProfile: false});
-            } catch (error) {
-                this.setState({status: error, isDone: false, isUploadingProfile: false})
-            }
+            this.props.uploadProfileImage(formData)
     }
 
     render() {
