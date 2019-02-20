@@ -1,9 +1,13 @@
-import React, {PureComponent} from 'react';
+import React, {Component} from 'react';
 
-class NoMatch extends PureComponent {
-  render() {
-    return <h1 className="h5">404 Not Found</h1>;
-  }
+class NoMatch extends Component {
+    render() {
+        return <React.Fragment>
+            <section className="container d-flex flex-row flex-grow-1 align-items-center justify-content-center">
+                <h1>404 Not Found</h1>
+            </section>
+        </React.Fragment>;
+    }
 }
 
 export default NoMatch;
