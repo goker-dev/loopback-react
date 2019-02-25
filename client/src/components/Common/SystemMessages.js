@@ -14,6 +14,10 @@ class SystemMessages extends React.Component {
     onClick = (index) => {
         let messages = this.state.messages;
         messages.splice(index, 1);
+        if (!messages.length) {
+            clearTimeout(this.destroyer);
+            this.destroyer = false;
+        }
         this.setState({
             messages: messages
         });
@@ -52,17 +56,17 @@ class SystemMessages extends React.Component {
             <div id="systemMessages">{
                 this.state.messages.map((message, key) => {
                     const className = message.type === 'error' ? 'alert-danger' : 'alert-success';
-                    return <div key={key} className="col-sm-12 col-md-6 col-lg-5 p-1 mx-auto">
-                        <div className={'alert alert-dismissible fade show ' + className}>
-                            <i className="fa fa-exclamation-triangle mr-2"/>
-                            <strong>{message.name}:</strong> {message.message}
-                            <button type="button" className="close" data-dismiss="alert" aria-label="Close"
-                                    onClick={() => {
-                                        this.onClick(key)
-                                    }}>
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
+                    return <div key={key}
+                                className={"col-sm-12 col-md-6 col-lg-5 mx-auto alert alert-dismissible show "
+                                + className}>
+                        <i className="fa fa-exclamation-triangle mr-2"/>
+                        <strong>{message.name}:</strong> {message.message}
+                        <button type="button" className="close" data-dismiss="alert" aria-label="Close"
+                                onClick={() => {
+                                    this.onClick(key)
+                                }}>
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                         {this.delayedRemove(key)}
                     </div>
                 })}

@@ -7,6 +7,12 @@ const FILE_URL = process.env.REACT_APP_FILE_URL;
 let TOKEN = localStorage.getItem('token');
 let UID = localStorage.getItem('uid');
 
+axios.interceptors.response.use(
+    response => response,
+    error => Promise.reject(error && error.response
+        ? {type: type.ERROR, payload: error.response}
+        : {type: type.ERROR, payload: {data: {error: {name: 'Error', message: error.message}}}})
+);
 
 export const signUp = (data) => {
     return (dispatch) => {
@@ -20,10 +26,7 @@ export const signUp = (data) => {
                     History.push('/signin')
                 }, 1500);
             })
-            .catch(error => dispatch({
-                type: type.ERROR,
-                payload: error.response
-            }));
+            .catch(error => dispatch(error));
     };
 };
 
@@ -48,15 +51,9 @@ export const signIn = (data) => {
                         dispatch({type: type.AUTH_USER, payload: setSession(response)});
                         History.push('/home');
                     })
-                    .catch(error => dispatch({
-                        type: type.ERROR,
-                        payload: error.response
-                    }));
+                    .catch(error => dispatch(error));
             })
-            .catch(error => dispatch({
-                type: type.ERROR,
-                payload: error.response
-            }));
+            .catch(error => dispatch(error));
     };
 };
 
@@ -82,10 +79,7 @@ export const resetPasswordRequest = (email) => {
                     payload: {name: 'SUCCESS', message: 'We sent an email to you. Please check your email.'}
                 })
             })
-            .catch(error => dispatch({
-                type: type.ERROR,
-                payload: error.response
-            }));
+            .catch(error => dispatch(error));
     };
 };
 
@@ -103,10 +97,7 @@ export const resetPassword = ({token, password}) => {
                     History.push('/signin')
                 }, 1500);
             })
-            .catch(error => dispatch({
-                type: type.ERROR,
-                payload: error.response
-            }));
+            .catch(error => dispatch(error));
     };
 };
 
@@ -165,10 +156,7 @@ export const fetchUser = (id) => {
             .then(response => {
                 dispatch({type: type.DATA, payload: computeUser(response.data)});
             })
-            .catch(error => dispatch({
-                type: type.ERROR,
-                payload: error.response
-            }));
+            .catch(error => dispatch(error));
     }
 };
 
@@ -193,10 +181,7 @@ export const getProfile = (username) => {
             .then(response => {
                 dispatch({type: type.DATA, payload: computeUser(response.data.user)});
             })
-            .catch(error => dispatch({
-                type: type.ERROR,
-                payload: error.response
-            }));
+            .catch(error => dispatch(error));
     }
 
     // return new Promise((resolve, reject) => {
@@ -240,10 +225,7 @@ export const addUser = (data) => {
             .then(() => {
                 History.push('/users');
             })
-            .catch(error => dispatch({
-                type: type.ERROR,
-                payload: error.response
-            }));
+            .catch(error => dispatch(error));
     };
 };
 
@@ -258,10 +240,7 @@ export const settingsAccount = (data) => {
                     payload: {name: 'SUCCESS', message: 'Your account has been updated successfully!'}
                 });
             })
-            .catch(error => dispatch({
-                type: type.ERROR,
-                payload: error.response
-            }));
+            .catch(error => dispatch(error));
     };
 };
 
@@ -275,10 +254,7 @@ export const settingsChangePassword = ({oldPassword, newPassword}) => {
                     payload: {name: 'SUCCESS', message: 'Your password has been changed successfully!'}
                 });
             })
-            .catch(error => dispatch({
-                type: type.ERROR,
-                payload: error.response
-            }));
+            .catch(error => dispatch(error));
     }
 };
 
@@ -290,10 +266,7 @@ export const getUsers = () => {
             .then(response => {
                 dispatch({type: type.DATA, payload: response.data.map(user => computeUser(user))});
             })
-            .catch(error => dispatch({
-                type: type.ERROR,
-                payload: error.response
-            }));
+            .catch(error => dispatch(error));
     }
 };
 
@@ -351,10 +324,7 @@ export const uploadCoverImage = (file) => {
             .then(response => {
                 dispatch({type: type.AUTH_USER, payload: setSession(computeUser(response.data.user))});
             })
-            .catch(error => dispatch({
-                type: type.ERROR,
-                payload: error.response
-            }));
+            .catch(error => dispatch(error));
     };
 };
 
@@ -369,13 +339,7 @@ export const uploadProfileImage = (file) => {
             .then(response => {
                 dispatch({type: type.AUTH_USER, payload: setSession(computeUser(response.data.user))});
             })
-            .catch(error => dispatch({
-                type: type.ERROR,
-                payload: error.response
-            }));
+            .catch(error => dispatch(error));
     };
 };
-
-
-
 
