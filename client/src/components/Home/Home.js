@@ -14,7 +14,7 @@ class Home extends Component {
             History.push('/signin');
     }
 
-    renderHello(user) {
+    static renderHello(user) {
         if (user) {
             return <p>Hello <strong> {user} </strong>, you logged in!</p>
         }
@@ -24,7 +24,7 @@ class Home extends Component {
         return <React.Fragment>
             <section className="container">
                 <h1 className="h2">Home</h1>
-                {this.props.me && this.renderHello(this.props.me.name)}
+                {this.props.me && Home.renderHello(this.props.me.name)}
                 <p>This is a static page and you must be logged in to see the page.</p>
             </section>
         </React.Fragment>;
@@ -33,6 +33,6 @@ class Home extends Component {
 
 const mapStateToProps = (state) => {
     return {authenticated: state.auth.authenticated, me: state.auth.me}
-}
+};
 
 export default connect(mapStateToProps)(Home);

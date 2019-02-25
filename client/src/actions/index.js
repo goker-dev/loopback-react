@@ -98,7 +98,10 @@ export const resetPassword = ({token, password}) => {
                 dispatch({
                     type: type.SUCCESS,
                     payload: {name: 'SUCCESS', message: 'You has been changed your password successfully.'}
-                })
+                });
+                setTimeout(() => {
+                    History.push('/signin')
+                }, 1500);
             })
             .catch(error => dispatch({
                 type: type.ERROR,
@@ -166,6 +169,19 @@ export const fetchUser = (id) => {
                 type: type.ERROR,
                 payload: error.response
             }));
+    }
+};
+
+export const searchUserByName = async (name) => {
+    const query = JSON.stringify({where: {name: {like: name, options: 'i'}}});
+    try {
+        const response = await axios.get(`${API_URL}/users?filter=${query}`, {
+            headers: {authorization: localStorage.getItem('token')}
+        });
+        console.log('searchUserByName', response);
+        return response.data
+    } catch (error) {
+        throw error
     }
 };
 

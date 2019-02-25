@@ -1,6 +1,7 @@
 export const ERROR = 'error';
 export const SUCCESS = 'success';
 export const DATA = 'data';
+export const FILE = 'file';
 
 export const AUTH_USER = 'auth_user';
 export const UNAUTH_USER = 'unauth_user';

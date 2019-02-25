@@ -2,6 +2,10 @@
   "name": "user",
   "base": "User",
   "idInjection": true,
+  "options": {
+    "validateUpsert": true,
+    "strictObjectIDCoercion": true
+  },
   "scope": {
     "include": [
       "roles"
