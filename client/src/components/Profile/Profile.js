@@ -42,7 +42,7 @@ class Profile extends Component {
         if (this.state.isLoading) return <section className="container">
             <div className="profile">Loading...</div>
         </section>;
-        if (!user) return <section className="container">
+        if (!user.name) return <section className="container">
             <div className="profile"><h3>User not found!</h3>
                 <p>{JSON.stringify(process.env)}</p></div>
         </section>;

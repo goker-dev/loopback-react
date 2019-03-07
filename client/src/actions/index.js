@@ -108,6 +108,7 @@ export const resetPassword = ({token, password}) => {
 };
 
 function computeUser(user) {
+    user = user || {roles:[]};
     user.isAdmin = user.roles.find(x => x.name === 'admin');
     user.isEditor = user.roles.find(x => x.name === 'editor');
     user.isManager = user.roles.find(x => x.name === 'manager');
@@ -185,12 +186,9 @@ export const getProfile = (username) => {
             headers: {authorization: localStorage.getItem('token')}
         })
             .then(response => {
-                console.log('PROFILE', response);
-
                 dispatch({type: type.DATA, payload: computeUser(response.data.user)});
             })
             .catch(error => {
-                console.log('ERROR', error);
                 dispatch(errorBeautifier(error))
             });
     }
