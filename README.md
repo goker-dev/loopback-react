@@ -32,7 +32,18 @@ cd client && yarn start
 ```
 The client run on **localhost:3000** and talking with api on **localhost:3003**
 
-##### Add a React Componnet
+
+### Run for Development
+```
+yarn watch
+```
+The watch command is running loopback at background. If you need to kill both services running on 3000 and 3003, you can use
+```
+yarn kill
+```
+
+
+##### Add a React Component
 ```
 cd client/
 npx crcf src/components/NewComponent
