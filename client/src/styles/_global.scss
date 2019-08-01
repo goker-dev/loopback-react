@@ -12,6 +12,7 @@ html, body {
 
 section {
   padding: 120px 0;
+
   &.cover {
     display: flex;
     flex-grow: 1;
@@ -25,6 +26,7 @@ section {
   justify-content: center;
   align-items: center;
   text-align: center;
+
   &:before,
   &:after {
     content: '';
@@ -32,43 +34,52 @@ section {
     margin: 0 20px 0 0;
     flex: 1 0 20px;
   }
+
   &:after {
     margin: 0 0 0 20px;
   }
+
   &.lined-primary {
     &:before,
     &:after {
       border-color: $primary;
     }
   }
+
   &.lined-secondary {
     &:before,
     &:after {
       border-color: $secondary;
     }
   }
+
   &.lined-third {
     &:before,
     &:after {
       border-color: $third;
     }
   }
+
   &.lined-fourth {
     &:before,
     &:after {
       border-color: $fourth;
     }
   }
+
   &.lined-align-left {
     text-align: left;
+
     &:before {
       border: 0;
       margin: 0;
       flex: 0;
     }
   }
+
   &.lined-align-right {
     text-align: right;
+
     &:after {
       border: 0;
       margin: 0;
@@ -77,4 +88,8 @@ section {
   }
 }
 
+.system-messages {
+  animation: shake 0.82s cubic-bezier(.36, .07, .19, .97) both;
+  animation-iteration-count: 2;
+}
 

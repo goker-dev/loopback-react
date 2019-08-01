@@ -64,11 +64,15 @@ class Navbar extends PureComponent {
 
     renderLinks() {
         if (this.state.me) {
-            return [
+            return <React.Fragment>
                 <li className="nav-item" key="users">
                     <Link className="nav-link" to="/users">Users</Link>
                 </li>
-            ];
+                {this.state.me.isWorker &&
+                <li className="nav-item">
+                    <Link className="nav-link" to="/sales-slips">Sales Slips</Link>
+                </li>}
+            </React.Fragment>
         } else {
             return [<li className="nav-item" key="features">
                 <Link className="nav-link" to="/features">Features</Link>

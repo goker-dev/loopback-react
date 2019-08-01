@@ -1,5 +1,6 @@
 @import '_variables.scss';
 @import '_mixins.scss';
+@import '_keyframes.scss';
 
 @import "~bootstrap/scss/bootstrap";
 
@@ -10,6 +11,7 @@
 @import '_intro.scss';
 
 
+@import '../components/Welcome/Welcome';
 @import '../components/Features/Features';
 
 @import '~nprogress/nprogress';

@@ -35,7 +35,7 @@ class SystemMessages extends React.Component {
                 this.destroyer = false;
                 if (messages.length)
                     this.delayedRemove();
-            }, 3000)
+            }, 4000)
     };
 
     componentWillReceiveProps = (props) => {
@@ -57,7 +57,7 @@ class SystemMessages extends React.Component {
                 this.state.messages.map((message, key) => {
                     const className = message.type === 'error' ? 'alert-danger' : 'alert-success';
                     return <div key={key}
-                                className={"col-sm-12 col-md-6 col-lg-5 mx-auto alert alert-dismissible show "
+                                className={"system-messages col-sm-12 col-md-6 col-lg-5 mx-auto alert alert-dismissible show "
                                 + className}>
                         <i className="fa fa-exclamation-triangle mr-2"/>
                         <strong>{message.name}:</strong> {message.message}
