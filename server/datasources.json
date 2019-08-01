@@ -6,8 +6,8 @@
   "mongo": {
     "host": "localhost",
     "port": 27017,
-    "url": "mongodb://localhost:27017/loopback-react",
-    "database": "loopback-react",
+    "url": "mongodb://localhost:27017",
+    "database": "playground",
     "password": "",
     "name": "mongo",
     "user": "",
@@ -18,7 +18,7 @@
     "name": "storage",
     "connector": "loopback-component-storage",
     "provider": "filesystem",
-    "root": "/var/www/workspace/playground/data/",
+    "root": "./data/",
     "maxFileSize": "52428800",
     "nameConflict": "makeUnique"
   },

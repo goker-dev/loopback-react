@@ -48,18 +48,9 @@ class Navbar extends PureComponent {
 
 
     renderLogo() {
-        if (this.state.me) {
-            return [
-                <Link to="/home" className="navbar-brand" key="logo">
-                    <img src={logo} className="img-fluid" alt="logo"/>
-                </Link>
-            ];
-        } else {
-            return [
-                <Link to="/" className="navbar-brand" key="logo">
-                    <img src={logo} className="img-fluid" alt="logo"/>
-                </Link>];
-        }
+        return <Link to={this.state.me ? "/home" : "/"} className="navbar-brand" key="logo">
+            <img src={logo} className="img-fluid" alt="logo"/>
+        </Link>
     }
 
     renderLinks() {

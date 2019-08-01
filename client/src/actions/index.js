@@ -7,11 +7,17 @@ const FILE_URL = process.env.REACT_APP_FILE_URL;
 let TOKEN = localStorage.getItem('token');
 let UID = localStorage.getItem('uid');
 
+const errorBeautifier = error => {
+    return error.hasOwnProperty('payload')
+        ? error
+        : {type: type.ERROR, payload: {data: {error: {name: 'Error', message: error.message}}}}
+};
+
 axios.interceptors.response.use(
     response => response,
     error => Promise.reject(error && error.response
         ? {type: type.ERROR, payload: error.response}
-        : {type: type.ERROR, payload: {data: {error: {name: 'Error', message: error.message}}}})
+        : errorBeautifier(error))
 );
 
 export const signUp = (data) => {
@@ -102,6 +108,7 @@ export const resetPassword = ({token, password}) => {
 };
 
 function computeUser(user) {
+    user = user || {roles:[]};
     user.isAdmin = user.roles.find(x => x.name === 'admin');
     user.isEditor = user.roles.find(x => x.name === 'editor');
     user.isManager = user.roles.find(x => x.name === 'manager');
@@ -181,7 +188,9 @@ export const getProfile = (username) => {
             .then(response => {
                 dispatch({type: type.DATA, payload: computeUser(response.data.user)});
             })
-            .catch(error => dispatch(error));
+            .catch(error => {
+                dispatch(errorBeautifier(error))
+            });
     }
 
     // return new Promise((resolve, reject) => {
