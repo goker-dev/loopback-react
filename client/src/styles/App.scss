@@ -1,17 +1,18 @@
-@import '_variables.scss';
-@import '_mixins.scss';
-@import '_keyframes.scss';
+@import 'variables';
+@import 'mixins';
+@import 'keyframes';
 
 @import "~bootstrap/scss/bootstrap";
+@import '~nprogress/nprogress';
 
-@import '_global.scss';
-@import '_navbar.scss';
-@import '_sidebar.scss';
-@import '_main.scss';
-@import '_intro.scss';
+@import 'global';
+@import 'navbar';
+@import 'sidebar';
+@import 'main';
+@import 'forms';
 
 
 @import '../components/Welcome/Welcome';
 @import '../components/Features/Features';
 
-@import '~nprogress/nprogress';
+

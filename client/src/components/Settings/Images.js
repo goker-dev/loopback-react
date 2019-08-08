@@ -55,7 +55,7 @@ class Images extends Component {
                 {this.state.me.cover && this.state.me.cover.normal &&
                 <img src={this.state.me.cover.normal} alt={this.state.me.name}/>
                 }
-                <div className="image-input">
+                <div className="image-input-container">
                     <input type="file" id="cover" name="image" onChange={this.handleFileChange}/>
                 </div>
                 <figure className={this.state.isUploadingProfile ? 'ProfileImage uploading' : 'ProfileImage'}
@@ -65,7 +65,7 @@ class Images extends Component {
                     {this.state.me.image && this.state.me.image.normal &&
                     <img src={this.state.me.image.normal} alt={this.state.me.name}/>
                     }
-                    <div className="image-input">
+                    <div className="image-input-container">
                         <input type="file" id="profile" name="image" onChange={this.handleFileChange}/>
                     </div>
                 </figure>

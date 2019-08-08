@@ -4,12 +4,9 @@
     "connector": "memory"
   },
   "mongo": {
-    "host": "localhost",
-    "port": 27017,
-    "url": "mongodb://localhost:27017",
-    "database": "playground",
-    "password": "",
     "name": "mongo",
+    "url": "mongodb://127.0.0.1:27017/loopback-react",
+    "password": "",
     "user": "",
     "useNewUrlParser": "true",
     "connector": "mongodb"

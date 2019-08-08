@@ -4,8 +4,6 @@ import Account from './Account'
 import ChangePassword from './ChangePassword'
 import Images from './Images'
 
-import './Settings.css';
-
 const routes = [
     {
         path: '/settings(/account)?',
