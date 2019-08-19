@@ -93,3 +93,10 @@ section {
   animation-iteration-count: 2;
 }
 
+.page-item {
+  &.disabled {
+    a {
+      color: $gray-500;
+    }
+  }
+}

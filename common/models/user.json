@@ -59,6 +59,26 @@
       "model": "Role",
       "foreignKey": "principalId",
       "through": "RoleMapping"
+    },
+    "salesSlips": {
+      "type": "hasMany",
+      "model": "salesSlip",
+      "foreignKey": "ownerId",
+      "options": {
+        "nestRemoting": true,
+        "disableInclude": true
+      },
+      "through": "salesSlip"
+    },
+    "Lexicon": {
+      "type": "hasMany",
+      "model": "Lexicon",
+      "foreignKey": "createdBy",
+      "options": {
+        "nestRemoting": true,
+        "disableInclude": true
+      },
+      "through": "Lexicon"
     }
   },
   "acls": [
@@ -132,6 +152,25 @@
     }
   ],
   "methods": {
+    "list": {
+      "accepts": [
+        {
+          "arg": "req",
+          "type": "object",
+          "http": {
+            "source": "req"
+          }
+        }
+      ],
+      "returns": {
+        "arg": "list",
+        "type": "array"
+      },
+      "http": {
+        "path": "/list",
+        "verb": "get"
+      }
+    },
     "cover": {
       "accepts": [
         {
