@@ -18,7 +18,7 @@ class Profile extends Component {
             this.props.getProfile(username);
     }
 
-    componentWillReceiveProps(props) {
+    componentDidUpdate(props) {
         if (this.props.match.params.username !== props.match.params.username) {
             this.setState({
                 isLoading: true

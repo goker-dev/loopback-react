@@ -38,11 +38,11 @@ class List extends Component {
     }
   }
 
-  componentWillReceiveProps(props) {
+  componentDidUpdate(props) {
     const params = new URLSearchParams(props.location.search);
     const search = params.get('search') || '';
     const page = params.get('page') || 1;
-    console.log('componentWillReceiveProps', props);
+    console.log('componentDidUpdate', props);
 
     if (page !== this.state.page) {
       console.log('page', props);

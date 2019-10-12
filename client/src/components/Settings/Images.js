@@ -16,7 +16,7 @@ class Images extends Component {
         this.handleFileChange = this.handleFileChange.bind(this);
     }
 
-    componentWillReceiveProps(props) {
+    componentDidUpdate(props) {
         if (this.props.me !== props.me)
             this.setState({
                 me: props.me,

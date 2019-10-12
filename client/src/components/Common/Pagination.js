@@ -34,7 +34,7 @@ class CustomPagination extends React.Component {
     return pages
   };
 
-  componentWillReceiveProps = (props) => {
+  componentDidUpdate = (props) => {
     const totalPages = Math.ceil(props.count / props.limit);
     const range = Math.min(totalPages, props.range);
     const center = totalPages > range ? Math.ceil(range / 2) : range;

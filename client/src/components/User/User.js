@@ -26,7 +26,7 @@ class User extends Component {
         //this.setState({ folder: params.folder || 'sketches' }, (folder) => this.loadProjects(this.state.folder));
     }
 
-    componentWillReceiveProps(newProps) {
+    componentDidUpdate(newProps) {
         this.getUserData(newProps)
     }
 

@@ -34,7 +34,7 @@ class Navbar extends PureComponent {
       window.addEventListener('scroll', Navbar.Shrink);
   }
 
-  componentWillReceiveProps(props) {
+  componentDidUpdate(props) {
     this.setState({
       me: props.me,
       shrink: !!props.me

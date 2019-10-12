@@ -96,7 +96,7 @@ class EnhancedForm extends Component {
         // this.getUserData(this.props.match.params.id)
     }
 
-    componentWillReceiveProps = (props) => {
+    componentDidUpdate = (props) => {
         if (props.user && this.props.user !== props.user)
             this.setState({
                 user: props.user,

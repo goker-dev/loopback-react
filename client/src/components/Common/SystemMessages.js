@@ -38,7 +38,7 @@ class SystemMessages extends React.Component {
             }, 4000)
     };
 
-    componentWillReceiveProps = (props) => {
+    componentDidUpdate = (props) => {
         const error = props.system && props.system.error && props.system.error.data && props.system.error.data.error;
         const success = props.system && props.system.message;
         if (error || success) {

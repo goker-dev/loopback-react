@@ -32,7 +32,7 @@ class ToggleButton extends React.Component {
             // })
     };
 
-    componentWillReceiveProps = (props) => {
+    componentDidUpdate = (props) => {
         this.setState({
             status: props.status,
             loading: false
